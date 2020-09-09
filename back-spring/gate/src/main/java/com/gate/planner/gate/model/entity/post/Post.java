@@ -26,7 +26,4 @@ public class Post {
 
     @ManyToOne
     Place place;
-
-    @ManyToOne
-    Course course;
 }

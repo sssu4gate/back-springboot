@@ -1,10 +1,11 @@
 package com.gate.planner.gate.model.entity.place;
 
 import com.gate.planner.gate.model.entity.course.Course;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -20,6 +21,16 @@ public class Place {
     @Column(length = 20)
     String longitude;
 
+    String name;
+
     int likeNum = 0;
     int dislikeNum = 0;
+
+
+    @Builder
+    public Place(String latitude, String longitude, String name) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.name = name;
+    }
 }

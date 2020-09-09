@@ -1,6 +1,5 @@
 package com.gate.planner.gate.model.entity.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,10 +26,14 @@ public class User {
     @Column(unique = true, length = 40)
     String email;
 
+    @Column(unique = true, length = 20)
+    String nickName;
+
     @Builder
-    public User(String userName, String password, String Email) {
+    public User(String userName, String password, String Email, String nickName) {
         this.userName = userName;
         this.password = password;
         this.email = Email;
+        this.nickName = nickName;
     }
 }
