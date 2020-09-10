@@ -1,5 +1,6 @@
 package com.gate.planner.gate.model.entity.post;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,10 @@ public class Image {
 
     @ManyToOne
     Post post;
+
+    @Builder
+    public Image(Post post, String imgUrl) {
+        this.imgUrl = imgUrl;
+        this.post = post;
+    }
 }

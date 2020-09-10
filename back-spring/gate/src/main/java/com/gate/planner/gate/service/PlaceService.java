@@ -1,8 +1,7 @@
 package com.gate.planner.gate.service;
 
 import com.gate.planner.gate.dao.place.PlaceRepository;
-import com.gate.planner.gate.model.dto.request.place.PlaceDto;
-import com.gate.planner.gate.model.dto.request.place.PlaceRequestDto;
+import com.gate.planner.gate.model.dto.request.place.PlacePostDto;
 import com.gate.planner.gate.model.entity.place.Place;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,19 +14,17 @@ import java.util.List;
 public class PlaceService {
 
     private final PlaceRepository placeRepository;
-    private final CourseService courseService;
 
-    public void savePlaceAndCourse(PlaceRequestDto placeRequestDto) {
+    public List<Place> savePlaceAndCourse(PlacePostDto[] placePostsDto) {
         List<Place> places = new ArrayList<>();
-        for (PlaceDto placeDto : placeRequestDto.getPlaces()) {
-            Place place = placeRepository.findByLatitudeAndLongitude(placeDto.getLatitude(), placeDto.getLongitude())
+        for (PlacePostDto placePostDto : placePostsDto) {
+            Place place = placeRepository.findByAddressAndName(placePostDto.getAddress(), placePostDto.getPlaceName())
                     .orElse(placeRepository.save(
                             Place.builder()
-                                    .latitude(placeDto.getLatitude())
-                                    .longitude(placeDto.getLongitude())
-                                    .name(placeDto.getName()).build()));
+                                    .address(placePostDto.getAddress())
+                                    .name(placePostDto.getPlaceName()).build()));
             places.add(place);
         }
-        courseService.saveCourse(placeRequestDto.getCourseName(), placeRequestDto.getUserName());
+        return places;
     }
 }

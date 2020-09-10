@@ -3,6 +3,7 @@ package com.gate.planner.gate.exception;
 import com.gate.planner.gate.exception.auth.EmailAlreadyExistException;
 import com.gate.planner.gate.exception.auth.NickNameAlreadyExistException;
 import com.gate.planner.gate.exception.auth.UserNameAlreadyExistException;
+import com.gate.planner.gate.exception.post.InvalidFileTypeException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,16 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = EmailAlreadyExistException.class)
-    public ExceptionResponse EmailAlreadyExistException(EmailAlreadyExistException e) {
+    @ExceptionHandler(value = {EmailAlreadyExistException.class, UserNameAlreadyExistException.class, NickNameAlreadyExistException.class})
+    public ExceptionResponse AlreadyExistExceptions(Exception e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = UserNameAlreadyExistException.class)
-    public ExceptionResponse UserNameAlreadyExistException(UserNameAlreadyExistException e) {
-        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
-    }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = UserNotExistException.class)
@@ -33,8 +29,8 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = NickNameAlreadyExistException.class)
-    public ExceptionResponse NickNameAlreadyExistException(NickNameAlreadyExistException e) {
+    @ExceptionHandler(value = InvalidFileTypeException.class)
+    public ExceptionResponse InvalidFiletTypeException(InvalidFileTypeException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 }

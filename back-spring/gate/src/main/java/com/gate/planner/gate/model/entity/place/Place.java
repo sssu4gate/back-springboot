@@ -1,26 +1,24 @@
 package com.gate.planner.gate.model.entity.place;
 
-import com.gate.planner.gate.model.entity.course.Course;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Place {
     @Id
     @GeneratedValue
     Long id;
 
-    // 위도 x축
-    @Column(length = 20)
-    String latitude;
-    //경도 y축
-    @Column(length = 20)
-    String longitude;
-
+    String address;
     String name;
 
     int likeNum = 0;
@@ -28,9 +26,8 @@ public class Place {
 
 
     @Builder
-    public Place(String latitude, String longitude, String name) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public Place(String address, String name) {
+        this.address = address;
         this.name = name;
     }
 }

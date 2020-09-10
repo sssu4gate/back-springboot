@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PlaceRequestDto {
-    String courseName;
-    String userName;
-    PlaceDto[] places;
+public class PlacePostDto {
+    String address;
+    String placeName;
+    String content;
+    int imgCount;
 }
