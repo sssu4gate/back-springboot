@@ -25,10 +25,6 @@ public class Place {
     @Embedded
     Coordinate coordinate;
 
-    int likeNum = 0;
-    int dislikeNum = 0;
-
-
     @Builder
     public Place(String title, String category, Coordinate coordinate) {
         this.title = title;

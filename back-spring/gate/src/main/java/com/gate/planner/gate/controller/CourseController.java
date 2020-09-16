@@ -1,7 +1,6 @@
 package com.gate.planner.gate.controller;
 
 import com.gate.planner.gate.model.dto.request.place.WriteCourseRequestDto;
-import com.gate.planner.gate.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +15,4 @@ import java.io.IOException;
 @RequestMapping("/course")
 public class CourseController {
 
-    private final CourseService courseService;
-
-    @PostMapping
-    public void saveCourse(@RequestPart WriteCourseRequestDto writeCourseRequestDto, @RequestPart MultipartFile[] images) throws IOException {
-        courseService.saveCourse(writeCourseRequestDto, images);
-    }
 }
