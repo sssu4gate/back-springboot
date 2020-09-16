@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,16 +19,20 @@ public class Place {
     @GeneratedValue
     Long id;
 
-    String address;
-    String name;
+    String category;
+    String title;
+
+    @Embedded
+    Coordinate coordinate;
 
     int likeNum = 0;
     int dislikeNum = 0;
 
 
     @Builder
-    public Place(String address, String name) {
-        this.address = address;
-        this.name = name;
+    public Place(String title, String category, Coordinate coordinate) {
+        this.title = title;
+        this.category = category;
+        this.coordinate = coordinate;
     }
 }

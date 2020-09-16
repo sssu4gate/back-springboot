@@ -1,13 +1,14 @@
 package com.gate.planner.gate.model.entity.user;
 
+import com.gate.planner.gate.model.entity.course.Course;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -28,6 +29,9 @@ public class User {
 
     @Column(unique = true, length = 20)
     String nickName;
+
+    @ManyToMany
+    List<Course> scrapCourse = new ArrayList<Course>();
 
     @Builder
     public User(String userName, String password, String Email, String nickName) {
