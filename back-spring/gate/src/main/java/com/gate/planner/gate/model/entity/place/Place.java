@@ -1,33 +1,32 @@
 package com.gate.planner.gate.model.entity.place;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 public class Place {
     @Id
-    @GeneratedValue
     Long id;
 
+    String name;
     String category;
-    String title;
+    String address;
 
     @Embedded
     Coordinate coordinate;
 
     @Builder
-    public Place(String title, String category, Coordinate coordinate) {
-        this.title = title;
+    public Place(Long id, String address, String name, String category, Coordinate coordinate) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
         this.category = category;
         this.coordinate = coordinate;
     }

@@ -1,6 +1,6 @@
 package com.gate.planner.gate.controller;
 
-import com.gate.planner.gate.model.dto.request.search.SearchResponseDto;
+import com.gate.planner.gate.model.dto.request.place.PlaceDto;
 import com.gate.planner.gate.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ public class SearchController {
     private final ApiService apiService;
 
     @GetMapping
-    public ArrayList<SearchResponseDto> getSearchResult(@RequestParam String keyword, @RequestParam int page) throws IOException {
+    public ArrayList<PlaceDto> getSearchResult(@RequestParam String keyword, @RequestParam int page) throws IOException {
         return apiService.RequestAPI(page, keyword);
     }
 

@@ -1,7 +1,7 @@
 package com.gate.planner.gate.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gate.planner.gate.model.dto.request.search.SearchResponseDto;
+import com.gate.planner.gate.model.dto.request.place.PlaceDto;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,13 +38,13 @@ public class ApiService {
 
     private final RestTemplate restTemplate;
 
-    public ArrayList<SearchResponseDto> RequestAPI(int page, String keyword) throws IOException {
-        ArrayList<SearchResponseDto> result = new ArrayList<>();
+    public ArrayList<PlaceDto> RequestAPI(int page, String keyword) throws IOException {
+        ArrayList<PlaceDto> result = new ArrayList<>();
         String url = UriComponentsBuilder.fromHttpUrl(URL).queryParam("query", keyword).queryParam("size", 5).queryParam("page", page).build().toUriString();
-        ArrayList<LinkedHashMap> list = (ArrayList) restTemplate.exchange(url, HttpMethod.GET, entity, JSONObject.class).getBody().get("documents");
+        ArrayList<LinkedHashMap> list = (ArrayList<LinkedHashMap>) restTemplate.exchange(url, HttpMethod.GET, entity, JSONObject.class).getBody().get("documents");
 
         for (LinkedHashMap value : list)
-            result.add(objectMapper.readValue(JSONObject.toJSONString(value), SearchResponseDto.class));
+            result.add(objectMapper.readValue(JSONObject.toJSONString(value), PlaceDto.class));
 
         return result;
     }
