@@ -1,4 +1,4 @@
-package com.gate.planner.gate.service;
+package com.gate.planner.gate.service.place;
 
 import com.gate.planner.gate.dao.place.PlaceRepository;
 import com.gate.planner.gate.dao.place.PlaceWrapperRepository;
@@ -23,6 +23,9 @@ public class PlaceService {
     private final PlaceRepository placeRepository;
     private final PlaceWrapperRepository placeWrapperRepository;
 
+    /*
+        place저장
+     */
     @Transactional
     public Place savePlace(PlaceDto placeDto) {
         return placeRepository.findById(placeDto.getId())
@@ -35,7 +38,7 @@ public class PlaceService {
     }
 
     /*
-       코스 저장 시에 필요한 1차적인 장소 저장
+       코스 저장 시에 필요한 1차적인 장소 List에 담아서 반환
     */
     @Transactional
     public List<PlaceDto> decideCoursePlaces(List<PlaceDto> places) {
@@ -47,6 +50,9 @@ public class PlaceService {
         return returnPlaceList;
     }
 
+    /*
+        코스에 저장할 PlaceWrapper(Place + 기타 정보들)을 저장
+     */
     @Transactional
     public PlaceWrapper savePlaceWrapper(PlaceWrapperDto placeWrapperDto, Course course) {
         Place place = placeRepository.findById(placeWrapperDto.getId()).orElseThrow(PlaceNotExistException::new);

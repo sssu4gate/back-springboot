@@ -1,8 +1,9 @@
 package com.gate.planner.gate.model.dto.course.request;
 
 import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
-import com.gate.planner.gate.model.entity.place.PlaceWrapper;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -13,5 +14,6 @@ public class CourseRequestDto {
     String courseName;
     String content;
     List<PlaceWrapperDto> places;
+    List<String> memos;
 
 }

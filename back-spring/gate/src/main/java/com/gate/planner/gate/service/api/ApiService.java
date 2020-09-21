@@ -1,4 +1,4 @@
-package com.gate.planner.gate.service;
+package com.gate.planner.gate.service.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gate.planner.gate.model.dto.place.PlaceDto;

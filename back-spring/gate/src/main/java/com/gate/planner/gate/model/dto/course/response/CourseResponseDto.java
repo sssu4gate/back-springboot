@@ -1,7 +1,6 @@
 package com.gate.planner.gate.model.dto.course.response;
 
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
-import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,14 +29,16 @@ public class CourseResponseDto {
     int totalCost;
 
     List<PlaceWrapperResponseDto> places;
+    List<String> memos;
 
     @Builder
-    public CourseResponseDto(Long id, String title, String content, String userName, int totalCost, List<PlaceWrapperResponseDto> places) {
+    public CourseResponseDto(Long id, String title, String content, String userName, int totalCost, List<PlaceWrapperResponseDto> places, List<String> memos) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.userName = userName;
         this.totalCost = totalCost;
         this.places = places;
+        this.memos = memos;
     }
 }

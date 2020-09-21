@@ -3,7 +3,7 @@ package com.gate.planner.gate.controller;
 import com.gate.planner.gate.dao.place.PlaceRepository;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
 import com.gate.planner.gate.model.entity.place.Place;
-import com.gate.planner.gate.service.PlaceService;
+import com.gate.planner.gate.service.place.PlaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
