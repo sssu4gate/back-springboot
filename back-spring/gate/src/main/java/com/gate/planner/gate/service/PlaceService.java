@@ -1,9 +1,14 @@
 package com.gate.planner.gate.service;
 
 import com.gate.planner.gate.dao.place.PlaceRepository;
-import com.gate.planner.gate.model.dto.request.place.PlaceDto;
+import com.gate.planner.gate.dao.place.PlaceWrapperRepository;
+import com.gate.planner.gate.exception.place.PlaceNotExistException;
+import com.gate.planner.gate.model.dto.place.PlaceDto;
+import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
+import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.place.Coordinate;
 import com.gate.planner.gate.model.entity.place.Place;
+import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +19,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PlaceService {
+
     private final PlaceRepository placeRepository;
+    private final PlaceWrapperRepository placeWrapperRepository;
 
     @Transactional
     public Place savePlace(PlaceDto placeDto) {
@@ -31,12 +38,23 @@ public class PlaceService {
        코스 저장 시에 필요한 1차적인 장소 저장
     */
     @Transactional
-    public List<Place> decideCoursePlaces(List<PlaceDto> places) {
-        ArrayList<Place> returnPlaceList = new ArrayList<>();
+    public List<PlaceDto> decideCoursePlaces(List<PlaceDto> places) {
+        ArrayList<PlaceDto> returnPlaceList = new ArrayList<>();
 
         for (PlaceDto place : places)
-            returnPlaceList.add(savePlace(place));
+            returnPlaceList.add(new PlaceDto(savePlace(place)));
 
         return returnPlaceList;
+    }
+
+    @Transactional
+    public PlaceWrapper savePlaceWrapper(PlaceWrapperDto placeWrapperDto, Course course) {
+        Place place = placeRepository.findById(placeWrapperDto.getId()).orElseThrow(PlaceNotExistException::new);
+        return placeWrapperRepository.save(PlaceWrapper.builder()
+                .place(place)
+                .course(course)
+                .cost(placeWrapperDto.getCost())
+                .time(placeWrapperDto.getTime())
+                .build());
     }
 }

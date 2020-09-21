@@ -1,4 +1,4 @@
-package com.gate.planner.gate.model.dto.request.user;
+package com.gate.planner.gate.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

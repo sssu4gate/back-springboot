@@ -1,7 +1,7 @@
 package com.gate.planner.gate.controller;
 
 import com.gate.planner.gate.dao.place.PlaceRepository;
-import com.gate.planner.gate.model.dto.request.place.PlaceDto;
+import com.gate.planner.gate.model.dto.place.PlaceDto;
 import com.gate.planner.gate.model.entity.place.Place;
 import com.gate.planner.gate.service.PlaceService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class PlaceController {
     private final PlaceRepository placeRepository;
 
     @PostMapping("/save")
-    public List<Place> decidePlaces(@RequestBody List<PlaceDto> places) {
+    public List<PlaceDto> decidePlaces(@RequestBody List<PlaceDto> places) {
         return placeService.decideCoursePlaces(places);
     }
 

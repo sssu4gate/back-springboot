@@ -1,6 +1,6 @@
 package com.gate.planner.gate.controller;
 
-import com.gate.planner.gate.model.dto.request.place.PlaceDto;
+import com.gate.planner.gate.model.dto.place.PlaceDto;
 import com.gate.planner.gate.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

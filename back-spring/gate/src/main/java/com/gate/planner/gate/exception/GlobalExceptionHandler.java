@@ -3,6 +3,7 @@ package com.gate.planner.gate.exception;
 import com.gate.planner.gate.exception.auth.EmailAlreadyExistException;
 import com.gate.planner.gate.exception.auth.NickNameAlreadyExistException;
 import com.gate.planner.gate.exception.auth.UserNameAlreadyExistException;
+import com.gate.planner.gate.exception.place.PlaceNotExistException;
 import com.gate.planner.gate.exception.post.InvalidFileTypeException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = InvalidFileTypeException.class)
     public ExceptionResponse InvalidFiletTypeException(InvalidFileTypeException e) {
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = PlaceNotExistException.class)
+    public ExceptionResponse PlaceNotExistException(PlaceNotExistException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 }

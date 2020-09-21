@@ -1,6 +1,7 @@
-package com.gate.planner.gate.model.dto.request.place;
+package com.gate.planner.gate.model.dto.place;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gate.planner.gate.model.entity.place.Place;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,15 @@ public class PlaceDto {
     private String x;
     private String y;
 
+
+    public PlaceDto(Place place) {
+        this.id = place.getId();
+        this.address_name = place.getAddress();
+        this.category_name = place.getCategory();
+        this.x = place.getCoordinate().getX();
+        this.y = place.getCoordinate().getY();
+        this.place_name = place.getName();
+    }
 
     @Builder
     public PlaceDto(Long id, String address_name, String place_name, String category_name, String x, String y) {

@@ -2,13 +2,14 @@ package com.gate.planner.gate.model.entity.place;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Data
+@Getter
 @Entity
 @NoArgsConstructor
 public class Place {

@@ -2,17 +2,14 @@ package com.gate.planner.gate.model.entity.course;
 
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course {
@@ -29,6 +26,7 @@ public class Course {
     @JoinColumn(nullable = false)
     User user;
 
+    @Setter
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<PlaceWrapper> places = new ArrayList<>();
 

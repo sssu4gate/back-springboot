@@ -29,10 +29,11 @@ public class PlaceWrapper {
     Course course;
 
     @Builder
-    public PlaceWrapper(int cost, String time, Place place) {
+    public PlaceWrapper(int cost, String time, Place place, Course course) {
         this.cost = cost;
         this.time = time;
         this.place = place;
+        this.course = course;
     }
 
 }

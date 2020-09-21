@@ -1,7 +1,7 @@
 package com.gate.planner.gate.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gate.planner.gate.model.dto.request.place.PlaceDto;
+import com.gate.planner.gate.model.dto.place.PlaceDto;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
