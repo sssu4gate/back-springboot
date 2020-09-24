@@ -22,7 +22,7 @@ public class Course {
 
     String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     User user;
 
@@ -30,11 +30,13 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<PlaceWrapper> places = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "scrapCourse")
-    List<User> users = new ArrayList<>();
 
+    @Setter
     int commentNum = 0;
+
+    @Setter
     int likeNum = 0;
+
     int totalCost = 0;
 
     @Builder

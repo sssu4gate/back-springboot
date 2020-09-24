@@ -9,10 +9,7 @@ import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.service.course.CourseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +23,11 @@ public class CourseController {
     @PostMapping("/save")
     public CourseResponseDto saveCourse(@RequestBody CourseRequestDto courseRequestDto) {
         return courseService.saveCourse(courseRequestDto);
+    }
+
+    @GetMapping("/like/{id}")
+    public void likeCourse(@PathVariable Long id, @RequestParam String userName) {
+        courseService.likeCourse(id, userName);
     }
 
 

@@ -29,9 +29,6 @@ public class User {
     @Column(unique = true, length = 20)
     String nickName;
 
-    @ManyToMany
-    List<Course> scrapCourse = new ArrayList<Course>();
-
     @Builder
     public User(String userName, String password, String Email, String nickName) {
         this.userName = userName;
