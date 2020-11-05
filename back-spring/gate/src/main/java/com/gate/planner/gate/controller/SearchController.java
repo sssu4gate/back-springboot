@@ -19,7 +19,7 @@ public class SearchController {
 
     @GetMapping
     public ArrayList<PlaceDto> getSearchResult(@RequestParam String keyword, @RequestParam int page) throws IOException {
-        return apiService.RequestAPI(page, keyword);
+        return apiService.callLocationAPI(page, keyword);
     }
 
 }

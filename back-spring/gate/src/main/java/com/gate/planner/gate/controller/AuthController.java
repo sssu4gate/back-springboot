@@ -1,7 +1,6 @@
 package com.gate.planner.gate.controller;
 
 
-import com.gate.planner.gate.model.RedirectBody;
 import com.gate.planner.gate.model.entity.user.LoginType;
 import com.gate.planner.gate.service.api.ApiService;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +25,9 @@ import java.util.LinkedHashMap;
 public class AuthController {
 
     private final ApiService apiService;
-
+    @GetMapping("/login")
+    public ResponseEntity<JSONObject> getAccessToken(@RequestParam String code)
+    {
+        return apiService.callLoginAPI(code);
+    }
 }
