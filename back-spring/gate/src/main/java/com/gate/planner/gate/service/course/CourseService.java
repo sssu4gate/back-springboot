@@ -81,7 +81,6 @@ public class CourseService {
                 .totalCost(totalCost)
                 .places(places)
                 .memos(memos)
-                .userName(user.getUserName())
                 .build();
     }
 

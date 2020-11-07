@@ -29,7 +29,16 @@ public class ApiService {
 
     @Value("${kakao.api.profile.url}")
     private String KAKAO_PROFILE_URL;
-    String URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
+
+    @Value("${kakao.api.location.url}")
+    private String KAKAO_LOCATION_URL;
+
+    @Value("${kakao.api.login.url}")
+    private String KAKAO_LOGIN_URL;
+
+    @Value("${kakao.api.logout.url}")
+    private String KAKAO_LOGOUT_URL;
+
     ObjectMapper objectMapper = new ObjectMapper();
 
     private final RestTemplate restTemplate;
@@ -39,7 +48,7 @@ public class ApiService {
         headers.set("Authorization", "KakaoAK " + APIKEY);
         entity = new HttpEntity<String>(headers);
         ArrayList<PlaceDto> result = new ArrayList<>();
-        String url = UriComponentsBuilder.fromHttpUrl(URL).queryParam("query", keyword).queryParam("size", 5).queryParam("page", page).build().toUriString();
+        String url = UriComponentsBuilder.fromHttpUrl(KAKAO_LOCATION_URL).queryParam("query", keyword).queryParam("size", 5).queryParam("page", page).build().toUriString();
         ArrayList<LinkedHashMap> list = (ArrayList<LinkedHashMap>) restTemplate.exchange(url, HttpMethod.GET, entity, JSONObject.class).getBody().get("documents");
 
         for (LinkedHashMap value : list)
@@ -58,7 +67,6 @@ public class ApiService {
     }
 
     public ResponseEntity<JSONObject> callLoginAPI(String code) {
-        String URL = "https://kauth.kakao.com/oauth/token";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -68,6 +76,13 @@ public class ApiService {
         params.add("code", code);
         entity = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
-        return restTemplate.exchange(URL, HttpMethod.POST, entity, JSONObject.class);
+        return restTemplate.exchange(KAKAO_LOGIN_URL, HttpMethod.POST, entity, JSONObject.class);
+    }
+
+    public void callLogOutAPI(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        entity = new HttpEntity(headers);
+        restTemplate.exchange(KAKAO_LOGOUT_URL, HttpMethod.POST, entity, JSONObject.class);
     }
 }
