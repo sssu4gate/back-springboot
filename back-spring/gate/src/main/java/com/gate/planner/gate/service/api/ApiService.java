@@ -1,6 +1,7 @@
 package com.gate.planner.gate.service.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gate.planner.gate.dao.user.UserRepository;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -20,6 +21,7 @@ import java.util.LinkedHashMap;
 @RequiredArgsConstructor
 public class ApiService {
     HttpEntity entity;
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${spring.url.base}")
     String BASE_URL;
@@ -39,9 +41,11 @@ public class ApiService {
     @Value("${kakao.api.logout.url}")
     private String KAKAO_LOGOUT_URL;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    @Value("${kakao.api.tokeninfo.url}")
+    private String KAKAO_TOKEN_INFO_URL;
 
     private final RestTemplate restTemplate;
+    private final UserRepository userRepository;
 
     public ArrayList<PlaceDto> callLocationAPI(int page, String keyword) throws IOException {
         HttpHeaders headers = new HttpHeaders();
@@ -74,7 +78,7 @@ public class ApiService {
         params.add("client_id", APIKEY);
         params.add("redirect_uri", BASE_URL + "/auth/login");
         params.add("code", code);
-        entity = new HttpEntity<MultiValueMap<String, String>>(params, headers);
+        entity = new HttpEntity(params, headers);
 
         return restTemplate.exchange(KAKAO_LOGIN_URL, HttpMethod.POST, entity, JSONObject.class);
     }
@@ -84,5 +88,33 @@ public class ApiService {
         headers.set("Authorization", "Bearer " + accessToken);
         entity = new HttpEntity(headers);
         restTemplate.exchange(KAKAO_LOGOUT_URL, HttpMethod.POST, entity, JSONObject.class);
+    }
+
+    public void callTokenInfo(String accessToken, String refreshToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "Bearer " + accessToken);
+        entity = new HttpEntity(headers);
+
+        ResponseEntity<Object> response = restTemplate.exchange(KAKAO_TOKEN_INFO_URL, HttpMethod.GET, entity, Object.class);
+        if (response.getStatusCode().value() == 400 || response.getStatusCode().value() == 401) {
+            /**
+             400은 잘못된 토큰형식, 401은 만료
+             Seucirty ContextHolder 가져와서 User객체를 찾은다음
+             accessToken과 refeshToken을 바꿔주기
+             */
+
+        } else if (response.getStatusCode().value() == 200) {
+            /**
+             *  정상실행된것
+             */
+        } else {
+            /**
+             * 알수 없는 오류 발생 시 에러 리턴 (재 로그인 필요).
+             */
+        }
+        /**
+         * return 정상 accessToken
+         */
     }
 }

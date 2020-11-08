@@ -13,9 +13,4 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    /**
-     * username로 회원 조회
-     */
-    public UserResponseDto findOne(String userName) { return new UserResponseDto(userRepository.findByUserName(userName).orElseThrow(UserNotExistException::new)); }
 }
