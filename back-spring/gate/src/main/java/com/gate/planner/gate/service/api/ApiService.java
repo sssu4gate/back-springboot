@@ -23,7 +23,7 @@ public class ApiService {
     HttpEntity entity;
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${spring.url.base}")
+    @Value("${application.url.base}")
     String BASE_URL;
 
     @Value("${kakao.api.key}")
