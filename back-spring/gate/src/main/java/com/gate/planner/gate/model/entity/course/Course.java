@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -30,6 +31,8 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<PlaceWrapper> places = new ArrayList<>();
 
+
+    Date createdAt = new Date();
 
     @Setter
     int commentNum = 0;

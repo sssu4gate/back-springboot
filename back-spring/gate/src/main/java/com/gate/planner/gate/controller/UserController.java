@@ -15,18 +15,5 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/find")
-    public void find()
-    {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getDetails());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-    }
 
-    /*
-    @GetMapping("/myinfo")
-    public UserInfoResponseDto myInfo(@RequestParam String username) {
-        return userService.findOne(username);
-    }
-     */
 }

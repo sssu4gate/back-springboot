@@ -22,6 +22,7 @@ import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.service.place.PlaceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,11 +43,10 @@ public class CourseService {
         코스 저장
      */
 
-    /*
     @Transactional
     public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) {
         // 추후에 User 회원가입 로직이 생기면 바꿀 것 --> 지금은 import.sql에 기본적으로 ktj7916이 저장하게 했음.
-        User user = userRepository.findByUserName("ktj7916").orElseThrow(UserNotExistException::new);
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         List<PlaceWrapperResponseDto> places = new ArrayList<>();
         List<String> memos = null;
         int totalCost = 0;
@@ -84,8 +84,8 @@ public class CourseService {
 
 
     @Transactional
-    public void likeCourse(Long id, String userName) {
-        User user = userRepository.findByUserName(userName).orElseThrow(UserNotExistException::new);
+    public void likeCourse(Long id) {
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         Course course = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
 
         if (courseLikeRepository.existsByCourseAndUser(course, user)) {
@@ -101,8 +101,8 @@ public class CourseService {
     }
 
     @Transactional(readOnly = true)
-    public List<CourseResponseDto> findCourse(String userName, CourseRequestType type, int page) {
-        User user = userRepository.findByUserName(userName).orElseThrow(UserNotExistException::new);
+    public List<CourseResponseDto> findCourse(String nickName,CourseRequestType type, int page) {
+        User user = userRepository.findByNickName(nickName).orElseThrow(UserNotExistException::new);
         List<CourseResponseDto> returnCourseList = new ArrayList<>();
         if (type.equals(CourseRequestType.LIKE)) {
             List<CourseOnly> courseList = courseLikeRepository.findAllByUser(user, new CommonPage(page));
@@ -117,6 +117,5 @@ public class CourseService {
             throw new CourseRequestTypeWrongException();
         return returnCourseList;
     }
-    */
 }
 

@@ -35,10 +35,9 @@ public class CommentService {
     /**
      * 댓글 입력
      */
-    /*
     public Long saveComment(CommentRequestDto commentRequestDto) {
-        User user = userRepository.findById(SecurityContextHolder.getContext().getAuthentication().getName())).
-        orElseThrow(UserNotExistException::new);   // 임시
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).
+                orElseThrow(UserNotExistException::new);   // 임시
         Comment comment = commentRepository.save(
                 Comment.builder().
                         content(commentRequestDto.getContent()).
@@ -49,8 +48,6 @@ public class CommentService {
 
         return comment.getId();
     }
-
-     */
 
     /**
      * 댓글 삭제

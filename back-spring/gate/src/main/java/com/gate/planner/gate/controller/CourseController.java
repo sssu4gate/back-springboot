@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/course")
 public class CourseController {
-    /*
     private final CourseService courseService;
 
     @PostMapping("/save")
@@ -25,14 +24,12 @@ public class CourseController {
     }
 
     @GetMapping("/like/{id}")
-    public void likeCourse(@PathVariable Long id, @RequestParam String userName) {
-        courseService.likeCourse(id, userName);
+    public void likeCourse(@PathVariable Long id) {
+        courseService.likeCourse(id);
     }
 
     @GetMapping
-    public List<CourseResponseDto> getCourses(@RequestParam String userName, @RequestParam CourseRequestType type, @RequestParam int page) {
-        return courseService.findCourse(userName, type, page);
+    public List<CourseResponseDto> getCourses(@RequestParam String nickname,@RequestParam CourseRequestType type, @RequestParam int page) {
+        return courseService.findCourse(nickname,type, page);
     }
-
-     */
 }
