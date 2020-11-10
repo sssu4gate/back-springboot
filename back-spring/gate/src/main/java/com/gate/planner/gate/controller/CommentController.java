@@ -22,7 +22,7 @@ public class CommentController {
     // 댓글 입력
     @PostMapping("/post")
     public void postComment(@RequestBody CommentRequestDto commentRequestDto){
-        commentService.saveComment(commentRequestDto);
+        //commentService.saveComment(commentRequestDto);
     }
 
     // 댓글 삭제

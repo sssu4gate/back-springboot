@@ -1,8 +1,13 @@
 package com.gate.planner.gate.service.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gate.planner.gate.dao.user.UserRepository;
+import com.gate.planner.gate.exception.user.UserNotExistException;
+import com.gate.planner.gate.model.dto.api.ProfileApiDto;
+import com.gate.planner.gate.model.dto.api.TokenRefreshDto;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
+import com.gate.planner.gate.model.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,8 +46,8 @@ public class ApiService {
     @Value("${kakao.api.logout.url}")
     private String KAKAO_LOGOUT_URL;
 
-    @Value("${kakao.api.tokeninfo.url}")
-    private String KAKAO_TOKEN_INFO_URL;
+    @Value("${kakao.api.refresh.token.url}")
+    private String KAKAO_REFRESH_TOKEN_URL;
 
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
@@ -61,13 +66,13 @@ public class ApiService {
         return result;
     }
 
-    public ResponseEntity<JSONObject> callUserInfoAPI(String accessToken) {
+    public ProfileApiDto callUserInfoAPI(String accessToken) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         entity = new HttpEntity<String>(headers);
 
-        return restTemplate.exchange(KAKAO_PROFILE_URL, HttpMethod.GET, entity, JSONObject.class);
+        return objectMapper.readValue(restTemplate.exchange(KAKAO_PROFILE_URL, HttpMethod.GET, entity, JSONObject.class).getBody().toJSONString(), ProfileApiDto.class);
     }
 
     public ResponseEntity<JSONObject> callLoginAPI(String code) {
@@ -90,31 +95,25 @@ public class ApiService {
         restTemplate.exchange(KAKAO_LOGOUT_URL, HttpMethod.POST, entity, JSONObject.class);
     }
 
-    public void callTokenInfo(String accessToken, String refreshToken) {
+    public User refreshTokenApi(String refreshToken) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Bearer " + accessToken);
-        entity = new HttpEntity(headers);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-        ResponseEntity<Object> response = restTemplate.exchange(KAKAO_TOKEN_INFO_URL, HttpMethod.GET, entity, Object.class);
-        if (response.getStatusCode().value() == 400 || response.getStatusCode().value() == 401) {
-            /**
-             400은 잘못된 토큰형식, 401은 만료
-             Seucirty ContextHolder 가져와서 User객체를 찾은다음
-             accessToken과 refeshToken을 바꿔주기
-             */
+        params.add("grant_type", "refresh_token");
+        params.add("client_id", APIKEY);
+        params.add("refresh_token", refreshToken);
 
-        } else if (response.getStatusCode().value() == 200) {
-            /**
-             *  정상실행된것
-             */
-        } else {
-            /**
-             * 알수 없는 오류 발생 시 에러 리턴 (재 로그인 필요).
-             */
-        }
-        /**
-         * return 정상 accessToken
-         */
+        entity = new HttpEntity(params, headers);
+
+        TokenRefreshDto tokenRefreshDto = objectMapper.readValue((restTemplate.exchange(KAKAO_REFRESH_TOKEN_URL, HttpMethod.POST, entity, JSONObject.class).getBody().toJSONString()), TokenRefreshDto.class);
+        ProfileApiDto profile = callUserInfoAPI(tokenRefreshDto.getAccess_token());
+        User user = userRepository.findById(profile.getId()).orElseThrow(UserNotExistException::new);
+
+        if (tokenRefreshDto.getRefresh_token() != null)
+            user.setRefreshToken(tokenRefreshDto.getRefresh_token());
+        user.setAccessToken(tokenRefreshDto.getAccess_token());
+
+        return user;
     }
 }

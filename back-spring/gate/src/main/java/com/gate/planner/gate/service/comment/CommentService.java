@@ -8,6 +8,7 @@ import com.gate.planner.gate.model.dto.comment.response.CommentResponseDto;
 import com.gate.planner.gate.model.entity.comment.Comment;
 import com.gate.planner.gate.model.entity.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +35,10 @@ public class CommentService {
     /**
      * 댓글 입력
      */
+    /*
     public Long saveComment(CommentRequestDto commentRequestDto) {
-        User user = userRepository.findByUserName("ktj7916").orElseThrow(UserNotExistException::new);   // 임시
+        User user = userRepository.findById(SecurityContextHolder.getContext().getAuthentication().getName())).
+        orElseThrow(UserNotExistException::new);   // 임시
         Comment comment = commentRepository.save(
                 Comment.builder().
                         content(commentRequestDto.getContent()).
@@ -46,6 +49,8 @@ public class CommentService {
 
         return comment.getId();
     }
+
+     */
 
     /**
      * 댓글 삭제

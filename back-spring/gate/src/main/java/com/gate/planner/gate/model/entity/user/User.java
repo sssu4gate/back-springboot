@@ -8,7 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,8 @@ public class User implements UserDetails {
 
     String refreshToken;
 
+    Date birth;
+
     @Enumerated(EnumType.STRING)
     Gender gender;
 
@@ -34,17 +38,14 @@ public class User implements UserDetails {
 
 
     @Builder
-    public User(Long id, String refreshToken, Gender gender, String accessToken, String nickName) {
+    public User(Long id, Date birth, String refreshToken, Gender gender, String accessToken, String nickName, List<String> roles) {
         this.id = id;
+        this.birth = birth;
         this.gender = gender;
         this.refreshToken = refreshToken;
         this.accessToken = accessToken;
         this.nickName = nickName;
-    }
-
-    public void changeToken(String refreshToken, String accessToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+        this.roles = roles;
     }
 
     @Override

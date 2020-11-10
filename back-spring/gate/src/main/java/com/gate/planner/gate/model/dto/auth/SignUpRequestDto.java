@@ -11,7 +11,7 @@ public class SignUpRequestDto {
     Long id;
     String nickName;
     Gender gender;
-    LocalDateTime birth;
+    String birth;
     String accessToken;
     String refreshToken;
 }

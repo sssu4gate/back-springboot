@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/course")
 public class CourseController {
-
+    /*
     private final CourseService courseService;
 
     @PostMapping("/save")
@@ -34,5 +34,5 @@ public class CourseController {
         return courseService.findCourse(userName, type, page);
     }
 
-
+     */
 }

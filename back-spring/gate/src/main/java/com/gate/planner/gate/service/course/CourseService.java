@@ -41,6 +41,8 @@ public class CourseService {
     /*
         코스 저장
      */
+
+    /*
     @Transactional
     public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) {
         // 추후에 User 회원가입 로직이 생기면 바꿀 것 --> 지금은 import.sql에 기본적으로 ktj7916이 저장하게 했음.
@@ -54,17 +56,13 @@ public class CourseService {
                         .content(courseRequestDto.getContent())
                         .user(user).build());
 
-        /*
-            placeWrapper를 생성해주고 Course와 연관관계 맺어주기
-         */
+
         for (PlaceWrapperDto placeWrapperDto : courseRequestDto.getPlaces()) {
             PlaceWrapper placeWrapper = placeService.savePlaceWrapper(placeWrapperDto, course);
             totalCost += placeWrapper.getCost();
             places.add(new PlaceWrapperResponseDto(placeWrapper));
         }
-        /*
-            CourseMemo를 만들어주고 연관관계 맺어주기
-         */
+
         if (courseRequestDto.getMemos() != null) {
             memos = new ArrayList<>();
             for (String memo : courseRequestDto.getMemos())
@@ -84,10 +82,7 @@ public class CourseService {
                 .build();
     }
 
-    /*
-        우선 Like 되어있는지 확인하기 위해서 검색을 하고, 이미 존재 할 경우 삭제 + course 에서 likeNum 감소시키고,
-        없다면 Like 정보를 DB에 담고, course 에서 likeNum을 하나 증가시킨다.
-     */
+
     @Transactional
     public void likeCourse(Long id, String userName) {
         User user = userRepository.findByUserName(userName).orElseThrow(UserNotExistException::new);
@@ -122,4 +117,6 @@ public class CourseService {
             throw new CourseRequestTypeWrongException();
         return returnCourseList;
     }
+    */
 }
+
