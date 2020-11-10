@@ -1,14 +1,17 @@
 package com.gate.planner.gate.model.dto.place;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+@ApiModel
 @Getter
 public class PlaceWrapperDto {
 
-    //place의 id
+    @ApiModelProperty("PlaceWrapper의 식별자")
     Long id;
-    //place의 cost
+    @ApiModelProperty("그 장소에서의 사용 금액")
     int cost;
-    //place에 있었던 시간
+    @ApiModelProperty("그 장소에서 보낸 시간")
     String time;
 }

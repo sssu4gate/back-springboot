@@ -1,15 +1,20 @@
 package com.gate.planner.gate.model.dto.comment.request;
 
-import com.gate.planner.gate.model.entity.course.Course;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+@ApiModel
 @Getter
 public class CommentRequestDto {
-    String content;
-    Course course;
 
-    public CommentRequestDto(String content, Course course){
+    @ApiModelProperty("댓글 본문")
+    String content;
+    @ApiModelProperty("코스의 식별자")
+    Long courseId;
+
+    public CommentRequestDto(String content, Long courseId) {
         this.content = content;
-        this.course = course;
+        this.courseId = courseId;
     }
 }

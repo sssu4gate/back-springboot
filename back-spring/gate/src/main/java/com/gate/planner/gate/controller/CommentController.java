@@ -3,6 +3,7 @@ package com.gate.planner.gate.controller;
 import com.gate.planner.gate.model.dto.comment.request.CommentRequestDto;
 import com.gate.planner.gate.model.dto.comment.response.CommentResponseDto;
 import com.gate.planner.gate.service.comment.CommentService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,25 +16,25 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    // 댓글 내보내기
-    @GetMapping("/get")
-    public List<CommentResponseDto> getComment() { return commentService.getComment(); }
+    @ApiOperation("코스랑 관련된 댓글 전부 가져오기")
+    @GetMapping("/get/{courseId}")
+    public List<CommentResponseDto> getComment(@PathVariable Long courseId) { return commentService.getComment(courseId); }
 
-    // 댓글 입력
-    @PostMapping("/post")
+    @ApiOperation("댓글 입력하기")
+    @PostMapping("/")
     public void postComment(@RequestBody CommentRequestDto commentRequestDto){
-        //commentService.saveComment(commentRequestDto);
+        commentService.saveComment(commentRequestDto);
     }
 
-    // 댓글 삭제
-    @DeleteMapping("/delete/{id}")
-    public void deleteComment(@PathVariable Long id){
-        commentService.deleteComment(id);
+    @ApiOperation("댓글 삭제")
+    @DeleteMapping("/{commentId}")
+    public void deleteComment(@PathVariable Long commentId){
+        commentService.deleteComment(commentId);
     }
 
-    // 댓글 수정
-    @PutMapping("/modify/{id}")
-    public void modifyComment(@PathVariable Long id, String content) {
-        commentService.modifyComment(id, content);
+    @ApiOperation("댓글 수정")
+    @PutMapping("/{commentId}")
+    public void updateComment(@PathVariable Long commentId, @RequestBody String content) {
+        commentService.modifyComment(commentId, content);
     }
 }

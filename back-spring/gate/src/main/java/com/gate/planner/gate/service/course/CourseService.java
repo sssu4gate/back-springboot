@@ -74,6 +74,7 @@ public class CourseService {
 
         return CourseResponseDetailDto.builder()
                 .id(course.getId())
+                .createdAt(course.getCreatedAt())
                 .content(course.getContent())
                 .title(course.getTitle())
                 .totalCost(totalCost)

@@ -1,11 +1,15 @@
 package com.gate.planner.gate.service.comment;
 
 import com.gate.planner.gate.dao.coment.CommentRepository;
+import com.gate.planner.gate.dao.course.CourseRepository;
 import com.gate.planner.gate.dao.user.UserRepository;
+import com.gate.planner.gate.exception.course.CourseNotExistException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.comment.request.CommentRequestDto;
 import com.gate.planner.gate.model.dto.comment.response.CommentResponseDto;
+import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.entity.comment.Comment;
+import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,22 +18,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CommentService {
 
+    private final CourseRepository courseRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
     /**
      * post별 댓글 조회
      */
-    public List<CommentResponseDto> getComment() {
-        List<CommentResponseDto> commentList = new ArrayList<>();
-        commentRepository.findAll().stream().map(it -> commentList.add(new CommentResponseDto(it)));
-        return commentList;
+    public List<CommentResponseDto> getComment(Long courseId) {
+        return commentRepository.findByCourse_Id(courseId).stream().map(CommentResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -41,7 +45,7 @@ public class CommentService {
         Comment comment = commentRepository.save(
                 Comment.builder().
                         content(commentRequestDto.getContent()).
-                        course(commentRequestDto.getCourse()).
+                        course(courseRepository.findById(commentRequestDto.getCourseId()).orElseThrow(CourseNotExistException::new)).
                         user(user).
                         build()
         );
