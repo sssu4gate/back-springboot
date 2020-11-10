@@ -40,7 +40,7 @@ public class SwaggerConfig {
                 .securitySchemes(Arrays.asList(apiKey()));
     }
     private ApiKey apiKey() {
-        return new ApiKey("JWT", "X-AUTH-TOKEN", "header");
+        return new ApiKey("JWT", "Authorization", "header");
     }
     private SecurityContext securityContext() {
         return springfox
