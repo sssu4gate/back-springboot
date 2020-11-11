@@ -1,6 +1,7 @@
 package com.gate.planner.gate.model.dto.course.response;
 
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
+import com.gate.planner.gate.model.entity.course.CourseShareType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -47,10 +48,14 @@ public class CourseResponseDetailDto {
     @ApiModelProperty("작성 시간")
     Date createdAt;
 
+    @ApiModelProperty("공유 범위")
+    CourseShareType shareType;
+
     @Builder
-    public CourseResponseDetailDto(Long id, Date createdAt, String title, String content, String userName, int totalCost, List<PlaceWrapperResponseDto> places, List<String> memos) {
+    public CourseResponseDetailDto(Long id, Date createdAt, CourseShareType shareType, String title, String content, String userName, int totalCost, List<PlaceWrapperResponseDto> places, List<String> memos) {
         this.id = id;
         this.createdAt = createdAt;
+        this.shareType = shareType;
         this.title = title;
         this.content = content;
         this.userName = userName;

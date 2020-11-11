@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
+    Place findByNameContaining(String name);
 }
 

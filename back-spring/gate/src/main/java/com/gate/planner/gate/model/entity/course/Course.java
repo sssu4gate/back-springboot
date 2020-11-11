@@ -31,6 +31,9 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<PlaceWrapper> places = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    CourseShareType shareType;
+
 
     Date createdAt = new Date();
 
@@ -43,9 +46,10 @@ public class Course {
     int totalCost = 0;
 
     @Builder
-    public Course(String title, String content, User user) {
+    public Course(String title, String content, User user, CourseShareType shareType) {
         this.title = title;
         this.content = content;
         this.user = user;
+        this.shareType = shareType;
     }
 }

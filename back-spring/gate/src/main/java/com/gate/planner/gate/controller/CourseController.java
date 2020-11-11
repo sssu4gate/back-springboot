@@ -32,6 +32,6 @@ public class CourseController {
     @ApiOperation("코스 가져오기(조건 별)")
     @GetMapping
     public List<CourseResponseDto> getCourses(@RequestParam String nickname,@RequestParam CourseRequestType type, @RequestParam int page) {
-        return courseService.findCourse(nickname,type, page);
+        return courseService.searchCourse(nickname,type, page);
     }
 }

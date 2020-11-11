@@ -62,7 +62,7 @@ public class AuthService {
 
         User user = null;
         try {
-            ProfileApiDto profile = apiService.callUserInfoAPI(loginRequestDto.getAccessToken());
+            ProfileApiDto profile = apiService.callUserInfoAPI(loginRequestDto.getAccessToken(),loginRequestDto.getRefreshToken());
             user = userRepository.findById(profile.getId()).orElseThrow(UserNotExistException::new);
             return generateToken(user.getId());
         } catch (UserNotExistException ue) {

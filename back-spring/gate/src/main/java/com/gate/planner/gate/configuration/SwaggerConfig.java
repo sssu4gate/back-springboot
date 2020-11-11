@@ -23,7 +23,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         ParameterBuilder parameterBuilder = new ParameterBuilder();
-        parameterBuilder.name("X-AUTH-TOKEN")
+        parameterBuilder.name("Authorization")
                 .description("Access JWT token")
                 .modelRef(new ModelRef("String"))
                 .parameterType("header")

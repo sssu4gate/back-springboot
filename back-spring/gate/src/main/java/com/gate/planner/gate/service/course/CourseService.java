@@ -5,6 +5,7 @@ import com.gate.planner.gate.dao.course.CourseLikeRepository;
 import com.gate.planner.gate.dao.course.CourseMemoRepository;
 import com.gate.planner.gate.dao.course.CourseRepository;
 import com.gate.planner.gate.dao.course.projection.CourseOnly;
+import com.gate.planner.gate.dao.place.PlaceRepository;
 import com.gate.planner.gate.dao.user.UserRepository;
 import com.gate.planner.gate.exception.course.CourseNotExistException;
 import com.gate.planner.gate.exception.course.CourseRequestTypeWrongException;
@@ -14,10 +15,8 @@ import com.gate.planner.gate.model.dto.course.response.CourseResponseDetailDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
-import com.gate.planner.gate.model.entity.course.Course;
-import com.gate.planner.gate.model.entity.course.CourseLike;
-import com.gate.planner.gate.model.entity.course.CourseMemo;
-import com.gate.planner.gate.model.entity.course.CourseRequestType;
+import com.gate.planner.gate.model.entity.course.*;
+import com.gate.planner.gate.model.entity.place.Place;
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.service.place.PlaceService;
@@ -28,10 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CourseService {
+    private final PlaceRepository placeRepository;
     private final CourseRepository courseRepository;
     private final PlaceService placeService;
     private final UserRepository userRepository;
@@ -92,18 +93,20 @@ public class CourseService {
         if (courseLikeRepository.existsByCourseAndUser(course, user)) {
             course.setLikeNum(course.getLikeNum() - 1);
             courseLikeRepository.deleteByCourseAndUser(course, user);
+            course.getUser().setLikeNum(course.getUser().getLikeNum() - 1);
         } else {
             courseLikeRepository.save(CourseLike.builder()
                     .course(course)
                     .user(user).build());
 
             course.setLikeNum(course.getLikeNum() + 1);
+            course.getUser().setLikeNum(course.getUser().getLikeNum() + 1);
         }
     }
 
     @Transactional(readOnly = true)
-    public List<CourseResponseDto> findCourse(String nickName,CourseRequestType type, int page) {
-        User user = userRepository.findByNickName(nickName).orElseThrow(UserNotExistException::new);
+    public List<CourseResponseDto> findUserRelatedCourse(Long id, CourseRequestType type, int page) {
+        User user = userRepository.findById(id).orElseThrow(UserNotExistException::new);
         List<CourseResponseDto> returnCourseList = new ArrayList<>();
         if (type.equals(CourseRequestType.LIKE)) {
             List<CourseOnly> courseList = courseLikeRepository.findAllByUser(user, new CommonPage(page));
@@ -117,6 +120,19 @@ public class CourseService {
         } else
             throw new CourseRequestTypeWrongException();
         return returnCourseList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page) {
+        if (type.equals(CourseRequestType.WRITE)) {
+            return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+        } else if (type.equals(CourseRequestType.MONEY)) {
+            return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+        } else if (type.equals(CourseRequestType.TAG)) {
+            return null;
+        } else {
+            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord,keyWord,new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+        }
     }
 }
 

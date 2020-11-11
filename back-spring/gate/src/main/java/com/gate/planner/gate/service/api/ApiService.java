@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -66,13 +67,19 @@ public class ApiService {
         return result;
     }
 
-    public ProfileApiDto callUserInfoAPI(String accessToken) throws JsonProcessingException {
+    public ProfileApiDto callUserInfoAPI(String accessToken, String refreshToken) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         entity = new HttpEntity<String>(headers);
 
-        return objectMapper.readValue(restTemplate.exchange(KAKAO_PROFILE_URL, HttpMethod.GET, entity, JSONObject.class).getBody().toJSONString(), ProfileApiDto.class);
+        try {
+            ResponseEntity<JSONObject> ret = restTemplate.exchange(KAKAO_PROFILE_URL, HttpMethod.GET, entity, JSONObject.class);
+            return objectMapper.readValue(ret.getBody().toJSONString(), ProfileApiDto.class);
+        } catch (Exception e) {
+            refreshTokenApi(refreshToken);
+            return objectMapper.readValue(restTemplate.exchange(KAKAO_PROFILE_URL, HttpMethod.GET, entity, JSONObject.class).getBody().toJSONString(), ProfileApiDto.class);
+        }
     }
 
     public ResponseEntity<JSONObject> callLoginAPI(String code) {
@@ -105,9 +112,12 @@ public class ApiService {
         params.add("refresh_token", refreshToken);
 
         entity = new HttpEntity(params, headers);
-
         TokenRefreshDto tokenRefreshDto = objectMapper.readValue((restTemplate.exchange(KAKAO_REFRESH_TOKEN_URL, HttpMethod.POST, entity, JSONObject.class).getBody().toJSONString()), TokenRefreshDto.class);
-        ProfileApiDto profile = callUserInfoAPI(tokenRefreshDto.getAccess_token());
+
+        headers.set("Authorization", "Bearer " + tokenRefreshDto.getAccess_token());
+        entity = new HttpEntity(headers);
+        ProfileApiDto profile = objectMapper.readValue(restTemplate.exchange(KAKAO_PROFILE_URL, HttpMethod.GET, entity, JSONObject.class).getBody().toJSONString(), ProfileApiDto.class);
+
         User user = userRepository.findById(profile.getId()).orElseThrow(UserNotExistException::new);
 
         if (tokenRefreshDto.getRefresh_token() != null)

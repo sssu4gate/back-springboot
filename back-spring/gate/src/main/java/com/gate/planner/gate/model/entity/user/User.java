@@ -36,6 +36,7 @@ public class User implements UserDetails {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> roles;
 
+    int likeNum;
 
     @Builder
     public User(Long id, Date birth, String refreshToken, Gender gender, String accessToken, String nickName, List<String> roles) {
