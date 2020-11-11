@@ -16,7 +16,6 @@ import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
 import com.gate.planner.gate.model.entity.course.*;
-import com.gate.planner.gate.model.entity.place.Place;
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.service.place.PlaceService;
@@ -55,6 +54,7 @@ public class CourseService {
                 Course.builder()
                         .title(courseRequestDto.getCourseName())
                         .content(courseRequestDto.getContent())
+                        .shareType(courseRequestDto.getShareType())
                         .user(user).build());
 
 
@@ -75,6 +75,7 @@ public class CourseService {
 
         return CourseResponseDetailDto.builder()
                 .id(course.getId())
+                .shareType(course.getShareType())
                 .createdAt(course.getCreatedAt())
                 .content(course.getContent())
                 .title(course.getTitle())
