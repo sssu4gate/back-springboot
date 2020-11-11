@@ -123,11 +123,11 @@ public class CourseService {
         return returnCourseList;
     }
 
-    @Transactional(readOnly = true)
-    public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page) {
-        if (type.equals(CourseRequestType.WRITE)) {
-            return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
-        } else if (type.equals(CourseRequestType.MONEY)) {
+        @Transactional(readOnly = true)
+        public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page) {
+            if (type.equals(CourseRequestType.WRITE)) {
+                return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            } else if (type.equals(CourseRequestType.MONEY)) {
             return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type.equals(CourseRequestType.TAG)) {
             return null;
