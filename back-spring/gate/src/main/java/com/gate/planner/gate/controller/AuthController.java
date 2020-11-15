@@ -29,8 +29,8 @@ public class AuthController {
         return authService.login(loginRequestDto);
     }
 
-    @ApiOperation("테스트용(카카오로부터 Access,Refresh)")
-    @GetMapping("/kakaoapi/login")
+    @ApiOperation("카카오로부터 받은 Access,Refresh 프론트한테 전달")
+    @GetMapping("/kakao/login")
     public ResponseEntity<JSONObject> getAccessToken(@RequestParam String code) {
         return apiService.callLoginAPI(code);
     }

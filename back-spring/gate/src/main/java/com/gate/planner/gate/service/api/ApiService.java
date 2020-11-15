@@ -87,7 +87,7 @@ public class ApiService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", APIKEY);
-        params.add("redirect_uri", BASE_URL + "/auth/login");
+        params.add("redirect_uri", BASE_URL + "/auth/kakao/login");
         params.add("code", code);
         entity = new HttpEntity(params, headers);
 
