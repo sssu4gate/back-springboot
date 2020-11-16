@@ -45,6 +45,19 @@ public class Course {
 
     int totalCost = 0;
 
+    /**
+     * 행알이의 추가 코드
+     */
+    @Setter
+    int reportNum = 0;
+
+    /**
+     * 행알이가 추가한 코드
+     * 신고 횟수 5번 이상 인지 체크
+     */
+    @Setter
+    boolean reportFlag = false;
+
     @Builder
     public Course(String title, String content, User user, CourseShareType shareType) {
         this.title = title;

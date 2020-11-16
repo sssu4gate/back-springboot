@@ -25,7 +25,17 @@ public class CourseController {
 
     @ApiOperation("코스 좋아요 기능")
     @GetMapping("/like/{id}")
-    public void likeCourse(@PathVariable Long id) {
-        courseService.likeCourse(id);
+    public int likeCourse(@PathVariable Long id) {
+        /**
+         * 행알이의 추가 코드
+         */
+        return courseService.likeCourse(id);
     }
+
+    /**
+     * 행알이가 추가한 코드
+     */
+    @ApiOperation("코스 신고 기능")
+    @GetMapping("/report/{id}")
+    public void reportCourse(@PathVariable Long id) { courseService.reportCourse(id);}
 }

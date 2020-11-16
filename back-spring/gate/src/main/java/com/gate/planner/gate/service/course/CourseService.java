@@ -3,10 +3,12 @@ package com.gate.planner.gate.service.course;
 import com.gate.planner.gate.dao.common.CommonPage;
 import com.gate.planner.gate.dao.course.CourseLikeRepository;
 import com.gate.planner.gate.dao.course.CourseMemoRepository;
+import com.gate.planner.gate.dao.course.CourseReportRepository;
 import com.gate.planner.gate.dao.course.CourseRepository;
 import com.gate.planner.gate.dao.course.projection.CourseOnly;
 import com.gate.planner.gate.dao.place.PlaceRepository;
 import com.gate.planner.gate.dao.user.UserRepository;
+import com.gate.planner.gate.exception.course.AlreadyReportedException;
 import com.gate.planner.gate.exception.course.CourseNotExistException;
 import com.gate.planner.gate.exception.course.CourseRequestTypeWrongException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
@@ -37,12 +39,15 @@ public class CourseService {
     private final UserRepository userRepository;
     private final CourseMemoRepository courseMemoRepository;
     private final CourseLikeRepository courseLikeRepository;
-
-
-    /*
-        코스 저장
+    /**
+     * 행알이가 추가한 코드>3<
      */
+    private final CourseReportRepository courseReportRepository;
 
+
+    /**
+     * 코스 저장
+     */
     @Transactional
     public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) {
         // 추후에 User 회원가입 로직이 생기면 바꿀 것 --> 지금은 import.sql에 기본적으로 ktj7916이 저장하게 했음.
@@ -85,9 +90,11 @@ public class CourseService {
                 .build();
     }
 
-
+    /**
+     * 코스 좋아요
+     */
     @Transactional
-    public void likeCourse(Long id) {
+    public int likeCourse(Long id) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         Course course = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
 
@@ -103,8 +110,48 @@ public class CourseService {
             course.setLikeNum(course.getLikeNum() + 1);
             course.getUser().setLikeNum(course.getUser().getLikeNum() + 1);
         }
+
+        /**
+         * 행알이의 추가 코드
+         */
+        return course.getLikeNum();
     }
 
+    /**
+     * 코스 신고
+     * 행알이의 추가코드
+     */
+    public void reportCourse(Long id) {
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
+        Course course = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
+
+        if(courseReportRepository.existsByCourseAndUser(course, user)){
+            AlreadyReportedException alreadyReportedException = new AlreadyReportedException();
+            throw alreadyReportedException;
+        }
+        else {
+            courseReportRepository.save(CourseReport.builder()
+                    .course(course)
+                    .user(user).build());
+
+            course.setReportNum(course.getReportNum() + 1);
+        }
+
+        checkReportNum(course, course.getReportNum());
+    }
+
+    /**
+     * 코스 신고 횟수 체크
+     * 행알이가 추가한 코드
+     */
+    private void checkReportNum(Course course, int reportNum) {
+        if(reportNum == 5)
+            course.setReportFlag(true);
+    }
+
+    /**
+     * 코스 ??
+     */
     @Transactional(readOnly = true)
     public List<CourseResponseDto> findUserRelatedCourse(Long id, CourseRequestType type, int page) {
         User user = userRepository.findById(id).orElseThrow(UserNotExistException::new);
@@ -123,6 +170,9 @@ public class CourseService {
         return returnCourseList;
     }
 
+    /**
+     * 코스 검색
+     */
         @Transactional(readOnly = true)
         public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page) {
             if (type.equals(CourseRequestType.WRITE)) {
