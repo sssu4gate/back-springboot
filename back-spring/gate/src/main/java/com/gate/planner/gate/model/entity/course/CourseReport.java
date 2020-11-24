@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * 행알이가 추가한 코드
@@ -17,7 +14,6 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @Entity
 public class CourseReport {
-
     @Id
     @GeneratedValue
     Long id;
@@ -28,9 +24,13 @@ public class CourseReport {
     @ManyToOne
     Course course;
 
+    @Enumerated(EnumType.STRING)
+    CourseReportType reportType;
+
     @Builder
-    public CourseReport(Course course, User user){
+    public CourseReport(Course course, User user, CourseReportType type) {
         this.course = course;
+        this.reportType = type;
         this.user = user;
     }
 }

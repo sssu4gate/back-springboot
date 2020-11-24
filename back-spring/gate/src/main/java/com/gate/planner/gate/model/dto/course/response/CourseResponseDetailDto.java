@@ -1,7 +1,11 @@
 package com.gate.planner.gate.model.dto.course.response;
 
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
+import com.gate.planner.gate.model.entity.course.Course;
+import com.gate.planner.gate.model.entity.course.CourseMemo;
 import com.gate.planner.gate.model.entity.course.CourseShareType;
+import com.gate.planner.gate.model.entity.place.PlaceWrapper;
+import com.gate.planner.gate.model.entity.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -11,6 +15,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApiModel
 @Getter
@@ -26,8 +31,8 @@ public class CourseResponseDetailDto {
     @ApiModelProperty("코스 본문")
     String content;
 
-    @ApiModelProperty("코스 작성자")
-    String userName;
+    @ApiModelProperty("코스 작성자 닉네임")
+    String nickName;
 
     @ApiModelProperty("댓글 수")
     @Setter
@@ -52,15 +57,26 @@ public class CourseResponseDetailDto {
     CourseShareType shareType;
 
     @Builder
-    public CourseResponseDetailDto(Long id, Date createdAt, CourseShareType shareType, String title, String content, String userName, int totalCost, List<PlaceWrapperResponseDto> places, List<String> memos) {
+    public CourseResponseDetailDto(Long id, Date createdAt, CourseShareType shareType, String title, String content, String nickName, int totalCost, List<PlaceWrapperResponseDto> places, List<String> memos) {
         this.id = id;
         this.createdAt = createdAt;
         this.shareType = shareType;
         this.title = title;
         this.content = content;
-        this.userName = userName;
+        this.nickName = nickName;
         this.totalCost = totalCost;
         this.places = places;
         this.memos = memos;
+    }
+
+    public CourseResponseDetailDto(Course course, User user) {
+        this.id = course.getId();
+        this.createdAt = course.getCreatedAt();
+        this.shareType = course.getShareType();
+        this.title = course.getTitle();
+        this.content = course.getContent();
+        this.totalCost = course.getTotalCost();
+        this.places = course.getPlaces().stream().map(PlaceWrapperResponseDto::new).collect(Collectors.toList());
+
     }
 }

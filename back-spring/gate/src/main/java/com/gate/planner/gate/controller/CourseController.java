@@ -2,14 +2,12 @@ package com.gate.planner.gate.controller;
 
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDetailDto;
-import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
-import com.gate.planner.gate.model.entity.course.CourseRequestType;
+import com.gate.planner.gate.model.entity.course.CourseReportType;
 import com.gate.planner.gate.service.course.CourseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,5 +35,13 @@ public class CourseController {
      */
     @ApiOperation("코스 신고 기능")
     @GetMapping("/report/{id}")
-    public void reportCourse(@PathVariable Long id) { courseService.reportCourse(id);}
+    public void reportCourse(@PathVariable Long id, @RequestParam CourseReportType type) {
+        courseService.reportCourse(id, type);
+    }
+
+    @ApiOperation("코스 상세보기")
+    @GetMapping("/{id}")
+    public CourseResponseDetailDto responseCourseDetail(@PathVariable Long id) {
+        return courseService.courseDetail(id);
+    }
 }

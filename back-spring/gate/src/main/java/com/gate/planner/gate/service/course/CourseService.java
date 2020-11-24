@@ -50,7 +50,6 @@ public class CourseService {
      */
     @Transactional
     public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) {
-        // 추후에 User 회원가입 로직이 생기면 바꿀 것 --> 지금은 import.sql에 기본적으로 ktj7916이 저장하게 했음.
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         List<PlaceWrapperResponseDto> places = new ArrayList<>();
         List<String> memos = null;
@@ -121,17 +120,17 @@ public class CourseService {
      * 코스 신고
      * 행알이의 추가코드
      */
-    public void reportCourse(Long id) {
+    public void reportCourse(Long id, CourseReportType type) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         Course course = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
 
-        if(courseReportRepository.existsByCourseAndUser(course, user)){
+        if (courseReportRepository.existsByCourseAndUser(course, user)) {
             AlreadyReportedException alreadyReportedException = new AlreadyReportedException();
             throw alreadyReportedException;
-        }
-        else {
+        } else {
             courseReportRepository.save(CourseReport.builder()
                     .course(course)
+                    .type(type)
                     .user(user).build());
 
             course.setReportNum(course.getReportNum() + 1);
@@ -145,14 +144,14 @@ public class CourseService {
      * 행알이가 추가한 코드
      */
     private void checkReportNum(Course course, int reportNum) {
-        if(reportNum == 5)
+        if (reportNum == 5)
             course.setReportFlag(true);
     }
 
     /**
-     * 코스 ??
+     * 나와 연관된 코스정보
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public List<CourseResponseDto> findUserRelatedCourse(Long id, CourseRequestType type, int page) {
         User user = userRepository.findById(id).orElseThrow(UserNotExistException::new);
         List<CourseResponseDto> returnCourseList = new ArrayList<>();
@@ -173,17 +172,27 @@ public class CourseService {
     /**
      * 코스 검색
      */
-        @Transactional(readOnly = true)
-        public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page) {
-            if (type.equals(CourseRequestType.WRITE)) {
-                return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
-            } else if (type.equals(CourseRequestType.MONEY)) {
+    @Transactional
+    public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page) {
+        if (type.equals(CourseRequestType.WRITE)) {
+            return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+        } else if (type.equals(CourseRequestType.MONEY)) {
             return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type.equals(CourseRequestType.TAG)) {
             return null;
         } else {
-            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord,keyWord,new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord, keyWord, new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         }
+    }
+
+    /**
+     * 코스 상세보기
+     */
+    @Transactional
+    public CourseResponseDetailDto courseDetail(long id) {
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
+        Course course = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
+        return new CourseResponseDetailDto(course, user);
     }
 }
 
