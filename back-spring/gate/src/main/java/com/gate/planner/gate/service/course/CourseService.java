@@ -79,6 +79,7 @@ public class CourseService {
 
         return CourseResponseDetailDto.builder()
                 .id(course.getId())
+                .nickName(user.getNickName())
                 .shareType(course.getShareType())
                 .createdAt(course.getCreatedAt())
                 .content(course.getContent())
@@ -152,16 +153,16 @@ public class CourseService {
      * 나와 연관된 코스정보
      */
     @Transactional
-    public List<CourseResponseDto> findUserRelatedCourse(Long id, CourseRequestType type, int page) {
+    public List<CourseResponseDto> findUserRelatedCourse(Long id, CourseRequestType type, int page, int offset) {
         User user = userRepository.findById(id).orElseThrow(UserNotExistException::new);
         List<CourseResponseDto> returnCourseList = new ArrayList<>();
         if (type.equals(CourseRequestType.LIKE)) {
-            List<CourseOnly> courseList = courseLikeRepository.findAllByUser(user, new CommonPage(page));
+            List<CourseOnly> courseList = courseLikeRepository.findAllByUser(user, new CommonPage(page, offset));
             for (CourseOnly course : courseList)
                 returnCourseList.add(new CourseResponseDto(course.getCourse()));
 
         } else if (type.equals(CourseRequestType.WRITE)) {
-            List<Course> courseList = courseRepository.findAllByUser(user, new CommonPage(page));
+            List<Course> courseList = courseRepository.findAllByUser(user, new CommonPage(page, offset));
             for (Course course : courseList)
                 returnCourseList.add(new CourseResponseDto(course));
         } else
@@ -173,15 +174,15 @@ public class CourseService {
      * 코스 검색
      */
     @Transactional
-    public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page) {
+    public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page, int offset) {
         if (type.equals(CourseRequestType.WRITE)) {
-            return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type.equals(CourseRequestType.MONEY)) {
-            return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type.equals(CourseRequestType.TAG)) {
             return null;
         } else {
-            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord, keyWord, new CommonPage(page), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord, keyWord, new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         }
     }
 

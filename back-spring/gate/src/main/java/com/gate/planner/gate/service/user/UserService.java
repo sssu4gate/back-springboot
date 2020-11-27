@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class UserService {
     private final CourseService courseService;
     private final ApiService apiService;
 
-    public List<CourseResponseDto> findUserRelatedPost(int page, CourseRequestType type) {
-        return courseService.findUserRelatedCourse(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()), type, page);
+    public List<CourseResponseDto> findUserRelatedPost(@RequestParam int page, @RequestParam CourseRequestType type, @RequestParam int offset) {
+        return courseService.findUserRelatedCourse(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()), type, page, offset);
     }
 
     public UserInfoDto findProfile() throws JsonProcessingException {

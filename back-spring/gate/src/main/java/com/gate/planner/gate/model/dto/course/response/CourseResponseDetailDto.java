@@ -71,6 +71,7 @@ public class CourseResponseDetailDto {
 
     public CourseResponseDetailDto(Course course, User user) {
         this.id = course.getId();
+        this.nickName = user.getNickName();
         this.createdAt = course.getCreatedAt();
         this.shareType = course.getShareType();
         this.title = course.getTitle();

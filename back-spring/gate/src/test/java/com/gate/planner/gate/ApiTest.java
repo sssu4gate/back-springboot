@@ -21,7 +21,7 @@ public class ApiTest {
     void requestApiTest() throws IOException {
         //중간에 에러가 발생하면 안됨
         ArrayList<PlaceDto> placeList =
-                Assertions.assertDoesNotThrow(() -> apiService.callLocationAPI(1, "숭실대학교"));
+                Assertions.assertDoesNotThrow(() -> apiService.callLocationAPI(1, "숭실대학교", 10));
 
         //정상적인 요청일 경우 size가 0이면 안됨.
         Assertions.assertNotEquals(placeList.size(), 0);

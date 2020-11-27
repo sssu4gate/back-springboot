@@ -52,12 +52,12 @@ public class ApiService {
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
 
-    public ArrayList<PlaceDto> callLocationAPI(int page, String keyword) throws IOException {
+    public ArrayList<PlaceDto> callLocationAPI(int page, String keyword, int offset) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "KakaoAK " + APIKEY);
         entity = new HttpEntity<String>(headers);
         ArrayList<PlaceDto> result = new ArrayList<>();
-        String url = UriComponentsBuilder.fromHttpUrl(KAKAO_LOCATION_URL).queryParam("query", keyword).queryParam("size", 5).queryParam("page", page).build().toUriString();
+        String url = UriComponentsBuilder.fromHttpUrl(KAKAO_LOCATION_URL).queryParam("query", keyword).queryParam("size", offset).queryParam("page", page).build().toUriString();
         ArrayList<LinkedHashMap> list = (ArrayList<LinkedHashMap>) restTemplate.exchange(url, HttpMethod.GET, entity, JSONObject.class).getBody().get("documents");
 
         for (LinkedHashMap value : list)

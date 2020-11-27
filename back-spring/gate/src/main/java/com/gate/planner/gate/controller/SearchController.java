@@ -25,14 +25,14 @@ public class SearchController {
 
     @ApiOperation("키워드로 장소들 검색")
     @GetMapping("/place")
-    public ArrayList<PlaceDto> getPlaceSearchResult(@RequestParam String keyword, @RequestParam int page) throws IOException {
-        return apiService.callLocationAPI(page, keyword);
+    public ArrayList<PlaceDto> getPlaceSearchResult(@RequestParam String keyword, @RequestParam int page, @RequestParam int offset) throws IOException {
+        return apiService.callLocationAPI(page, keyword, offset);
     }
 
     @ApiOperation("키워드로 코스 검색")
     @GetMapping("/course")
-    public List<CourseResponseDto> getCourseSearchList(String keyword, CourseRequestType type, int page) {
-        return courseService.searchCourse(keyword, type, page);
+    public List<CourseResponseDto> getCourseSearchList(@RequestParam String keyword, @RequestParam CourseRequestType type, @RequestParam int page, @RequestParam int offset) {
+        return courseService.searchCourse(keyword, type, page, offset);
     }
 
 }
