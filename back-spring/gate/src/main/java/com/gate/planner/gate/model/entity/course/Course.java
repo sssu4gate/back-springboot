@@ -2,6 +2,7 @@ package com.gate.planner.gate.model.entity.course;
 
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
+import com.gate.planner.gate.util.DateUtil;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,7 +36,7 @@ public class Course {
     CourseShareType shareType;
 
 
-    Date createdAt = new Date();
+    Date createdAt =  DateUtil.toAsiaTimeZone();
 
     @Setter
     int commentNum = 0;

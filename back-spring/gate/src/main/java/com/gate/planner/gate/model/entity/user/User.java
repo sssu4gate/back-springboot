@@ -1,5 +1,6 @@
 package com.gate.planner.gate.model.entity.user;
 
+import com.gate.planner.gate.util.DateUtil;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +29,8 @@ public class User implements UserDetails {
     String refreshToken;
 
     Date birth;
+
+    Date createdAt = DateUtil.toAsiaTimeZone();
 
     @Enumerated(EnumType.STRING)
     Gender gender;

@@ -2,7 +2,11 @@ package com.gate.planner.gate.model.entity.comment;
 
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.user.User;
-import lombok.*;
+import com.gate.planner.gate.util.DateUtil;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,7 +23,7 @@ public class Comment {
 
     String content;
 
-    Date createdAt = new Date();
+    Date createdAt = DateUtil.toAsiaTimeZone();
 
     @ManyToOne
     User user;
@@ -34,7 +38,7 @@ public class Comment {
     List<Comment> childComment;
 
     @Builder
-    public Comment(String content, User user, Course course){
+    public Comment(String content, User user, Course course) {
         this.content = content;
         this.user = user;
         this.course = course;
