@@ -2,7 +2,7 @@ package com.gate.planner.gate.dao.course;
 
 import com.gate.planner.gate.dao.course.projection.CourseOnly;
 import com.gate.planner.gate.model.entity.course.Course;
-import com.gate.planner.gate.model.entity.course.CourseLike;
+import com.gate.planner.gate.model.entity.course.like.CourseLike;
 import com.gate.planner.gate.model.entity.user.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

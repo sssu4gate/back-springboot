@@ -1,7 +1,7 @@
 package com.gate.planner.gate.dao.course;
 
 import com.gate.planner.gate.model.entity.course.Course;
-import com.gate.planner.gate.model.entity.course.CourseReport;
+import com.gate.planner.gate.model.entity.course.report.CourseReport;
 import com.gate.planner.gate.model.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

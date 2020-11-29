@@ -1,9 +1,7 @@
 package com.gate.planner.gate.model.entity.user;
 
 import com.gate.planner.gate.util.DateUtil;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,12 +13,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 public class User implements UserDetails {
     @Id
     Long id;
 
+    @Setter
     @Column(unique = true, length = 20)
     String nickName;
 

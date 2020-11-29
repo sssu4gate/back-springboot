@@ -1,5 +1,6 @@
 package com.gate.planner.gate.model.entity.course;
 
+import com.gate.planner.gate.model.entity.course.memo.CourseMemo;
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.util.DateUtil;
@@ -36,7 +37,10 @@ public class Course {
     CourseShareType shareType;
 
 
-    Date createdAt =  DateUtil.toAsiaTimeZone();
+    Date createdAt = DateUtil.toAsiaTimeZone();
+
+    @OneToMany(mappedBy = "course")
+    List<CourseMemo> memos;
 
     @Setter
     int commentNum = 0;

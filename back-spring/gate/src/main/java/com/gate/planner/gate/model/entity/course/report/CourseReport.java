@@ -1,5 +1,6 @@
-package com.gate.planner.gate.model.entity.course;
+package com.gate.planner.gate.model.entity.course.report;
 
+import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.user.User;
 import lombok.Builder;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package com.gate.planner.gate.controller;
 
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDetailDto;
-import com.gate.planner.gate.model.entity.course.CourseReportType;
+import com.gate.planner.gate.model.entity.course.report.CourseReportType;
 import com.gate.planner.gate.service.course.CourseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

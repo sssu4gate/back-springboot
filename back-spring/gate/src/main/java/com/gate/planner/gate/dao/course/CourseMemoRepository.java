@@ -1,6 +1,6 @@
 package com.gate.planner.gate.dao.course;
 
-import com.gate.planner.gate.model.entity.course.CourseMemo;
+import com.gate.planner.gate.model.entity.course.memo.CourseMemo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

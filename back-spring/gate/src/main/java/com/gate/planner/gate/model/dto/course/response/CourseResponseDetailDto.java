@@ -2,9 +2,7 @@ package com.gate.planner.gate.model.dto.course.response;
 
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
 import com.gate.planner.gate.model.entity.course.Course;
-import com.gate.planner.gate.model.entity.course.CourseMemo;
 import com.gate.planner.gate.model.entity.course.CourseShareType;
-import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

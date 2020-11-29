@@ -1,4 +1,4 @@
-package com.gate.planner.gate.model.entity.course;
+package com.gate.planner.gate.model.entity.course.report;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

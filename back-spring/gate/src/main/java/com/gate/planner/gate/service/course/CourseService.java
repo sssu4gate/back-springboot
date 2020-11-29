@@ -12,12 +12,17 @@ import com.gate.planner.gate.exception.course.AlreadyReportedException;
 import com.gate.planner.gate.exception.course.CourseNotExistException;
 import com.gate.planner.gate.exception.course.CourseRequestTypeWrongException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
+import com.gate.planner.gate.model.dto.course.request.memo.CourseMemoDto;
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDetailDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
 import com.gate.planner.gate.model.entity.course.*;
+import com.gate.planner.gate.model.entity.course.like.CourseLike;
+import com.gate.planner.gate.model.entity.course.memo.CourseMemo;
+import com.gate.planner.gate.model.entity.course.report.CourseReport;
+import com.gate.planner.gate.model.entity.course.report.CourseReportType;
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.service.place.PlaceService;
@@ -33,11 +38,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CourseService {
+    private final CourseMemoRepository courseMemoRepository;
     private final PlaceRepository placeRepository;
     private final CourseRepository courseRepository;
     private final PlaceService placeService;
     private final UserRepository userRepository;
-    private final CourseMemoRepository courseMemoRepository;
     private final CourseLikeRepository courseLikeRepository;
     /**
      * 행알이가 추가한 코드>3<
@@ -70,10 +75,11 @@ public class CourseService {
 
         if (courseRequestDto.getMemos() != null) {
             memos = new ArrayList<>();
-            for (String memo : courseRequestDto.getMemos())
+            for (CourseMemoDto memo : courseRequestDto.getMemos())
                 memos.add(courseMemoRepository.save(CourseMemo.builder()
                         .course(course)
-                        .content(memo).build()).getContent());
+                        .type(memo.getType())
+                        .content(memo.getContent()).build()).getContent());
         }
 
 
