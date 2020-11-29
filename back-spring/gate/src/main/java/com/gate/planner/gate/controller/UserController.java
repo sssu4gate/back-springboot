@@ -26,11 +26,11 @@ public class UserController {
     public UserInfoDto userInfoProfile() throws JsonProcessingException {
         return userService.findProfile();
     }
+
     @ApiOperation(("나와 관련된 코스 보기"))
     @GetMapping("/info/course")
-    public List<CourseResponseDto> userRelatedCourse(@RequestParam CourseSearchType type, @RequestParam int page)
-    {
-        return userService.findUserRelatedPost(page,type);
+    public List<CourseResponseDto> userRelatedCourse(@RequestParam CourseSearchType type, @RequestParam int page, @RequestParam int offset) {
+        return userService.findUserRelatedPost(page, type, offset);
     }
 
 
