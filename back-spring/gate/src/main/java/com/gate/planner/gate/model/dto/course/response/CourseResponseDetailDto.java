@@ -33,6 +33,9 @@ public class CourseResponseDetailDto {
     @ApiModelProperty("코스 작성자 닉네임")
     String nickName;
 
+    @ApiModelProperty("데이트 날짜")
+    Date Dday;
+
     @ApiModelProperty("댓글 수")
     @Setter
     int commentNum = 0;
@@ -55,23 +58,13 @@ public class CourseResponseDetailDto {
     @ApiModelProperty("공유 범위")
     CourseShareType shareType;
 
-    @Builder
-    public CourseResponseDetailDto(Long id, Date createdAt, CourseShareType shareType, String title, String content, String nickName, int totalCost, List<PlaceWrapperResponseDto> places, List<CourseMemoDto> memos) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.shareType = shareType;
-        this.title = title;
-        this.content = content;
-        this.nickName = nickName;
-        this.totalCost = totalCost;
-        this.places = places;
-        this.memos = memos;
-    }
-
     public CourseResponseDetailDto(Course course, User user) {
         this.id = course.getId();
+        this.likeNum = course.getLikeNum();
+        this.commentNum = course.getCommentNum();
         this.nickName = user.getNickName();
         this.createdAt = course.getCreatedAt();
+        this.Dday = course.getDday();
         this.shareType = course.getShareType();
         this.title = course.getTitle();
         this.content = course.getContent();

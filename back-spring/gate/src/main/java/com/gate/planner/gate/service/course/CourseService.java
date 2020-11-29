@@ -27,11 +27,13 @@ import com.gate.planner.gate.model.entity.course.report.CourseReportType;
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.service.place.PlaceService;
+import com.gate.planner.gate.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +57,7 @@ public class CourseService {
      * 코스 저장
      */
     @Transactional
-    public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) {
+    public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) throws ParseException {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         List<PlaceWrapperResponseDto> places = new ArrayList<>();
         List<CourseMemoDto> memos = null;
@@ -65,6 +67,7 @@ public class CourseService {
                         .title(courseRequestDto.getCourseName())
                         .content(courseRequestDto.getContent())
                         .shareType(courseRequestDto.getShareType())
+                        .Dday(DateUtil.format.parse(courseRequestDto.getDday()))
                         .user(user).build());
 
 
@@ -86,17 +89,7 @@ public class CourseService {
         }
 
 
-        return CourseResponseDetailDto.builder()
-                .id(course.getId())
-                .nickName(user.getNickName())
-                .shareType(course.getShareType())
-                .createdAt(course.getCreatedAt())
-                .content(course.getContent())
-                .title(course.getTitle())
-                .totalCost(totalCost)
-                .places(places)
-                .memos(memos)
-                .build();
+        return new CourseResponseDetailDto(course, user);
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.gate.planner.gate.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,4 +12,6 @@ public class DateUtil {
         cal.add(Calendar.HOUR, 9);
         return cal.getTime();
     }
+
+    public static DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 }
