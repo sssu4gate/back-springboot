@@ -1,5 +1,8 @@
 package com.gate.planner.gate.model.entity.course;
 
-public enum CourseShareType {
+import lombok.Getter;
+
+@Getter
+public enum ShareType {
     PRIVATE, PUBLIC
 }

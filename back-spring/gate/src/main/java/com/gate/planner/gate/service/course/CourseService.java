@@ -172,13 +172,13 @@ public class CourseService {
     @Transactional
     public List<CourseResponseDto> searchCourse(String keyWord, CourseSearchType type, int page, int offset) {
         if (type.equals(CourseSearchType.WRITE)) {
-            return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type.equals(CourseSearchType.MONEY)) {
-            return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type.equals(CourseSearchType.TAG)) {
             return null;
         } else {
-            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord, keyWord, new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord, keyWord, new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         }
     }
 
@@ -198,10 +198,10 @@ public class CourseService {
     @Transactional
     public List<CourseResponseDto> basicCourseList(CourseRequestType type, int page, int offset) {
         if (type == CourseRequestType.LATEST) {
-            return courseRepository.findAllByShareType(CourseShareType.PUBLIC, new CommonPage(page, offset))
+            return courseRepository.findAllByShareType(ShareType.PUBLIC, new CommonPage(page, offset))
                     .stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type == CourseRequestType.LIKE) {
-            return courseRepository.findAllByShareTypeAndOrderByLikeNumDesc(CourseShareType.PUBLIC, new CommonPage(page, offset))
+            return courseRepository.findAllByShareTypeOrderByLikeNumDesc(ShareType.PUBLIC, new CommonPage(page, offset))
                     .stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else {
             throw new CourseRequestTypeInvalidException();

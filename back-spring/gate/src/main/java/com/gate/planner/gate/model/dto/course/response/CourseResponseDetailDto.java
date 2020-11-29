@@ -3,11 +3,10 @@ package com.gate.planner.gate.model.dto.course.response;
 import com.gate.planner.gate.model.dto.course.request.memo.CourseMemoDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
 import com.gate.planner.gate.model.entity.course.Course;
-import com.gate.planner.gate.model.entity.course.CourseShareType;
+import com.gate.planner.gate.model.entity.course.ShareType;
 import com.gate.planner.gate.model.entity.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,7 +55,7 @@ public class CourseResponseDetailDto {
     Date createdAt;
 
     @ApiModelProperty("공유 범위")
-    CourseShareType shareType;
+    ShareType shareType;
 
     public CourseResponseDetailDto(Course course, User user) {
         this.id = course.getId();

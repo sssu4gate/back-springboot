@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -21,7 +22,7 @@ public class CourseController {
 
     @ApiOperation("코스 저장")
     @PostMapping("/save")
-    public CourseResponseDetailDto saveCourse(@RequestBody CourseRequestDto courseRequestDto) {
+    public CourseResponseDetailDto saveCourse(@RequestBody CourseRequestDto courseRequestDto) throws ParseException {
         return courseService.saveCourse(courseRequestDto);
     }
 

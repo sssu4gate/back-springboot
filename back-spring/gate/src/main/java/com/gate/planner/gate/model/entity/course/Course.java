@@ -34,7 +34,7 @@ public class Course {
     List<PlaceWrapper> places = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    CourseShareType shareType;
+    ShareType shareType;
 
     Date Dday;
 
@@ -65,7 +65,7 @@ public class Course {
     boolean reportFlag = false;
 
     @Builder
-    public Course(String title, String content, User user, Date Dday, CourseShareType shareType) {
+    public Course(String title, String content, User user, Date Dday, ShareType shareType) {
         this.title = title;
         this.content = content;
         this.Dday = Dday;
