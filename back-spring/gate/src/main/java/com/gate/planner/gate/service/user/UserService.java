@@ -32,7 +32,14 @@ public class UserService {
 
     public UserInfoDto findProfile() throws JsonProcessingException {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
-        return new UserInfoDto(apiService.callUserInfoAPI(user.getAccessToken(), user.getRefreshToken()),user.getLikeNum());
+        return new UserInfoDto(apiService.callUserInfoAPI(user.getAccessToken(), user.getRefreshToken()), user);
+    }
 
+    /**
+     * 우선은 닉네임만 변경
+     */
+    public void updateProfile(@RequestParam String newNick){
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
+        user.setNickName(newNick);
     }
 }
