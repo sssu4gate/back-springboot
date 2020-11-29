@@ -1,4 +1,4 @@
-package com.gate.planner.gate.model.dto.course.request.memo;
+package com.gate.planner.gate.model.dto.course.response;
 
 import com.gate.planner.gate.model.entity.course.memo.CourseMemo;
 import com.gate.planner.gate.model.entity.course.memo.CourseMemoType;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CourseMemoDto {
+public class CourseMemoResponseDto {
     @ApiModelProperty("메모 식별자")
     Long id;
     @ApiModelProperty("메모 타입")
@@ -20,7 +20,7 @@ public class CourseMemoDto {
     @ApiModelProperty("메모 본문")
     String content;
 
-    public CourseMemoDto(CourseMemo courseMemo) {
+    public CourseMemoResponseDto(CourseMemo courseMemo) {
         this.id = courseMemo.getId();
         this.type = courseMemo.getType();
         this.content = courseMemo.getContent();

@@ -13,7 +13,8 @@ import com.gate.planner.gate.exception.course.CourseNotExistException;
 import com.gate.planner.gate.exception.course.CourseRequestTypeInvalidException;
 import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
-import com.gate.planner.gate.model.dto.course.request.memo.CourseMemoDto;
+import com.gate.planner.gate.model.dto.course.request.CourseMemoRequestDto;
+import com.gate.planner.gate.model.dto.course.response.CourseMemoResponseDto;
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDetailDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
@@ -60,7 +61,7 @@ public class CourseService {
     public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) throws ParseException {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         List<PlaceWrapperResponseDto> places = new ArrayList<>();
-        List<CourseMemoDto> memos = null;
+        List<CourseMemoResponseDto> memos = null;
         int totalCost = 0;
         Course course = courseRepository.save(
                 Course.builder()
@@ -79,8 +80,8 @@ public class CourseService {
 
         if (courseRequestDto.getMemos() != null) {
             memos = new ArrayList<>();
-            for (CourseMemoDto memo : courseRequestDto.getMemos())
-                memos.add(new CourseMemoDto(
+            for (CourseMemoRequestDto memo : courseRequestDto.getMemos())
+                memos.add(new CourseMemoResponseDto(
                         courseMemoRepository.save(CourseMemo.builder()
                                 .course(course)
                                 .type(memo.getType())

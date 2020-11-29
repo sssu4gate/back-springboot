@@ -1,6 +1,6 @@
 package com.gate.planner.gate.model.dto.course.request;
 
-import com.gate.planner.gate.model.dto.course.request.memo.CourseMemoDto;
+import com.gate.planner.gate.model.dto.course.response.CourseMemoResponseDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
 import com.gate.planner.gate.model.entity.course.ShareType;
 import io.swagger.annotations.ApiModel;
@@ -25,7 +25,7 @@ public class CourseRequestDto {
     @ApiModelProperty("장소들")
     List<PlaceWrapperDto> places;
     @ApiModelProperty("체크 리스트")
-    List<CourseMemoDto> memos;
+    List<CourseMemoRequestDto> memos;
     @ApiModelProperty("공유 범위")
     ShareType shareType;
 

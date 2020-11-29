@@ -1,6 +1,5 @@
 package com.gate.planner.gate.model.dto.course.response;
 
-import com.gate.planner.gate.model.dto.course.request.memo.CourseMemoDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.course.ShareType;
@@ -49,7 +48,7 @@ public class CourseResponseDetailDto {
     @ApiModelProperty("장소들")
     List<PlaceWrapperResponseDto> places;
     @ApiModelProperty("체크 리스트")
-    List<CourseMemoDto> memos;
+    List<CourseMemoResponseDto> memos;
 
     @ApiModelProperty("작성 시간")
     Date createdAt;
@@ -68,7 +67,7 @@ public class CourseResponseDetailDto {
         this.title = course.getTitle();
         this.content = course.getContent();
         this.totalCost = course.getTotalCost();
-        this.memos = course.getMemos().stream().map(CourseMemoDto::new).collect(Collectors.toList());
+        this.memos = course.getMemos().stream().map(CourseMemoResponseDto::new).collect(Collectors.toList());
         this.places = course.getPlaces().stream().map(PlaceWrapperResponseDto::new).collect(Collectors.toList());
 
     }
