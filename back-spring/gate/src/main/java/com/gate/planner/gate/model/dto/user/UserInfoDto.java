@@ -4,6 +4,7 @@ import com.gate.planner.gate.model.dto.api.ProfileApiDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.entity.user.Gender;
 import com.gate.planner.gate.model.entity.user.User;
+import com.gate.planner.gate.util.DateUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class UserInfoDto {
     String nickName;
 
     @ApiModelProperty("생년월일")
-    Date birth;
+    String birth;
 
     @ApiModelProperty("성별")
     Gender gender;
@@ -35,7 +36,7 @@ public class UserInfoDto {
         this.userInfo = profileApiDto;
         this.likeNum = user.getLikeNum();
         this.nickName = user.getNickName();
-        this.birth = user.getBirth();
+        this.birth = DateUtil.parseString(user.getBirth());
         this.gender = user.getGender();
     }
 }

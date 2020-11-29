@@ -68,7 +68,7 @@ public class CourseService {
                         .title(courseRequestDto.getCourseName())
                         .content(courseRequestDto.getContent())
                         .shareType(courseRequestDto.getShareType())
-                        .Dday(DateUtil.format.parse(courseRequestDto.getDday()))
+                        .dateDay(DateUtil.parseDateFormat(courseRequestDto.getDateDay()))
                         .user(user).build());
 
 
@@ -80,17 +80,30 @@ public class CourseService {
 
         if (courseRequestDto.getMemos() != null) {
             memos = new ArrayList<>();
-            for (CourseMemoRequestDto memo : courseRequestDto.getMemos())
-                memos.add(new CourseMemoResponseDto(
-                        courseMemoRepository.save(CourseMemo.builder()
-                                .course(course)
-                                .type(memo.getType())
-                                .content(memo.getContent()).build()
-                        )));
+            CourseMemo courseMemo = null;
+            for (CourseMemoRequestDto memo : courseRequestDto.getMemos()) {
+                courseMemo = courseMemoRepository.save(CourseMemo.builder()
+                        .course(course)
+                        .type(memo.getType())
+                        .content(memo.getContent()).build());
+                memos.add(new CourseMemoResponseDto(courseMemo));
+            }
         }
 
 
-        return new CourseResponseDetailDto(course, user);
+        return CourseResponseDetailDto.builder()
+                .id(course.getId())
+                .likeNum(course.getLikeNum())
+                .commentNum(course.getCommentNum())
+                .content(course.getContent())
+                .createdAt(course.getCreatedAt())
+                .dateDay(course.getDateDay())
+                .nickName(user.getNickName())
+                .title(course.getTitle())
+                .type(course.getShareType())
+                .totalCost(course.getTotalCost())
+                .memos(memos)
+                .places(places).build();
     }
 
     /**

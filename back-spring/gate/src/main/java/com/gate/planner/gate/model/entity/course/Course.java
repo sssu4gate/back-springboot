@@ -36,7 +36,7 @@ public class Course {
     @Enumerated(EnumType.STRING)
     ShareType shareType;
 
-    Date Dday;
+    Date dateDay;
 
     Date createdAt = DateUtil.toAsiaTimeZone();
 
@@ -65,10 +65,10 @@ public class Course {
     boolean reportFlag = false;
 
     @Builder
-    public Course(String title, String content, User user, Date Dday, ShareType shareType) {
+    public Course(String title, String content, User user, Date dateDay, ShareType shareType) {
         this.title = title;
         this.content = content;
-        this.Dday = Dday;
+        this.dateDay = dateDay;
         this.user = user;
         this.shareType = shareType;
     }

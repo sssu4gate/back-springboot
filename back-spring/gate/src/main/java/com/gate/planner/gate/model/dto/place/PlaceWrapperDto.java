@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class PlaceWrapperDto {
 
-    @ApiModelProperty("PlaceWrapper의 식별자")
+    @ApiModelProperty("Place의 식별자")
     Long id;
     @ApiModelProperty("그 장소에서의 사용 금액")
     int cost;

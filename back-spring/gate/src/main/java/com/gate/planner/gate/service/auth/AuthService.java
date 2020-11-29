@@ -33,7 +33,7 @@ public class AuthService {
                     .accessToken(signUpRequestDto.getAccessToken())
                     .refreshToken(signUpRequestDto.getRefreshToken())
                     .nickName(signUpRequestDto.getNickName())
-                    .birth(DateUtil.format.parse(signUpRequestDto.getBirth()))
+                    .birth(DateUtil.parseDateFormat(signUpRequestDto.getBirth()))
                     .gender(signUpRequestDto.getGender())
                     .roles(Collections.singletonList(UserRole.ROLE_USER.toString()))
                     .build();

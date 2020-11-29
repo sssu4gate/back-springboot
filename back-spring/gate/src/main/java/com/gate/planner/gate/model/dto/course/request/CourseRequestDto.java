@@ -21,7 +21,7 @@ public class CourseRequestDto {
     @ApiModelProperty("코스 본문")
     String content;
     @ApiModelProperty("데이트 날짜")
-    String Dday;
+    String dateDay;
     @ApiModelProperty("장소들")
     List<PlaceWrapperDto> places;
     @ApiModelProperty("체크 리스트")

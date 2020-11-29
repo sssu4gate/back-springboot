@@ -2,6 +2,7 @@ package com.gate.planner.gate.model.dto.course.response;
 
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.course.ShareType;
+import com.gate.planner.gate.util.DateUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class CourseResponseDto {
     int commentNum;
 
     @ApiModelProperty("작성 시간")
-    Date createdAt;
+    String createdAt;
 
     @ApiModelProperty("공유 범위")
     ShareType shareType;
@@ -34,7 +35,7 @@ public class CourseResponseDto {
         this.id = course.getId();
         this.shareType = course.getShareType();
         this.title = course.getTitle();
-        this.createdAt = course.getCreatedAt();
+        this.createdAt = DateUtil.parseString(course.getCreatedAt());
         this.likeNum = course.getLikeNum();
         this.commentNum = course.getCommentNum();
     }

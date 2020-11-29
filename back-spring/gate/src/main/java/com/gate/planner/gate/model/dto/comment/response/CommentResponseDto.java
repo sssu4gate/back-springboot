@@ -1,6 +1,7 @@
 package com.gate.planner.gate.model.dto.comment.response;
 
 import com.gate.planner.gate.model.entity.comment.Comment;
+import com.gate.planner.gate.util.DateUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -17,7 +18,7 @@ public class CommentResponseDto {
     private String nickName;
 
     @ApiModelProperty("댓글 작성 시간")
-    private Date createdAt;
+    private String createdAt;
 
     @ApiModelProperty("대 댓글")
     private List<Comment> childComment;
@@ -25,7 +26,7 @@ public class CommentResponseDto {
     public CommentResponseDto(Comment comment) {
         this.content = comment.getContent();
         this.nickName = comment.getUser().getNickName();
-        this.createdAt = comment.getCreatedAt();
+        this.createdAt = DateUtil.parseString(comment.getCreatedAt());
         this.childComment = comment.getChildComment();
     }
 }
