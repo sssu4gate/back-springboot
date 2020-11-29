@@ -7,10 +7,7 @@ import com.gate.planner.gate.model.entity.course.CourseSearchType;
 import com.gate.planner.gate.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,5 +30,9 @@ public class UserController {
         return userService.findUserRelatedPost(page, type, offset);
     }
 
-
+    @ApiOperation("닉네임 수정")
+    @PutMapping("/info/profile/update")
+    public void updateProfile(@RequestParam String newNick) {
+        userService.updateProfile(newNick);
+    }
 }
