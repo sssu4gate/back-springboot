@@ -1,5 +1,8 @@
 package com.gate.planner.gate.model.entity.course;
 
+import lombok.Getter;
+
+@Getter
 public enum CourseRequestType {
-    WRITE, LIKE, MONEY, TAG, PLACE, TEXT
+    LATEST, LIKE
 }

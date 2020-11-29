@@ -18,4 +18,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findAllByTotalCostIsLessThanEqualAndShareType(int cost, Pageable pageable, CourseShareType courseShareType);
 
     List<Course> findDistinctByTitleContainingOrContentContainingAndShareType(String tKeyword, String cKeyword, Pageable pageable, CourseShareType shareType);
+
+    List<Course> findAllByShareType(CourseShareType shareType, Pageable pageable);
+
+    List<Course> findAllByShareTypeAndOrderByLikeNumDesc(CourseShareType type, Pageable pageable);
 }

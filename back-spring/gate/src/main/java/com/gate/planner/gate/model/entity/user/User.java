@@ -23,8 +23,10 @@ public class User implements UserDetails {
     @Column(unique = true, length = 20)
     String nickName;
 
+    @Setter
     String accessToken;
 
+    @Setter
     String refreshToken;
 
     Date birth;
@@ -37,6 +39,7 @@ public class User implements UserDetails {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> roles;
 
+    @Setter
     int likeNum;
 
     @Builder

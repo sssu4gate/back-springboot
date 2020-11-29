@@ -5,7 +5,7 @@ import com.gate.planner.gate.dao.user.UserRepository;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.user.UserInfoDto;
-import com.gate.planner.gate.model.entity.course.CourseRequestType;
+import com.gate.planner.gate.model.entity.course.CourseSearchType;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.service.api.ApiService;
 import com.gate.planner.gate.service.course.CourseService;
@@ -26,7 +26,7 @@ public class UserService {
     private final CourseService courseService;
     private final ApiService apiService;
 
-    public List<CourseResponseDto> findUserRelatedPost(@RequestParam int page, @RequestParam CourseRequestType type, @RequestParam int offset) {
+    public List<CourseResponseDto> findUserRelatedPost(@RequestParam int page, @RequestParam CourseSearchType type, @RequestParam int offset) {
         return courseService.findUserRelatedCourse(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()), type, page, offset);
     }
 

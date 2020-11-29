@@ -4,7 +4,8 @@ import com.gate.planner.gate.exception.auth.EmailAlreadyExistException;
 import com.gate.planner.gate.exception.auth.NickNameAlreadyExistException;
 import com.gate.planner.gate.exception.auth.UserNameAlreadyExistException;
 import com.gate.planner.gate.exception.course.CourseNotExistException;
-import com.gate.planner.gate.exception.course.CourseRequestTypeWrongException;
+import com.gate.planner.gate.exception.course.CourseRequestTypeInvalidException;
+import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
 import com.gate.planner.gate.exception.place.PlaceNotExistException;
 import com.gate.planner.gate.exception.post.InvalidFileTypeException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
@@ -44,8 +45,14 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {CourseNotExistException.class, CourseRequestTypeWrongException.class})
+    @ExceptionHandler(value = {CourseNotExistException.class, CourseSearchTypeWrongException.class})
     public ExceptionResponse CourseNotExistException(CourseNotExistException e) {
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = CourseRequestTypeInvalidException.class)
+    public ExceptionResponse CourseRequestTypeInvalidException(CourseRequestTypeInvalidException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 }

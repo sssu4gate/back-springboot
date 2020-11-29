@@ -10,7 +10,8 @@ import com.gate.planner.gate.dao.place.PlaceRepository;
 import com.gate.planner.gate.dao.user.UserRepository;
 import com.gate.planner.gate.exception.course.AlreadyReportedException;
 import com.gate.planner.gate.exception.course.CourseNotExistException;
-import com.gate.planner.gate.exception.course.CourseRequestTypeWrongException;
+import com.gate.planner.gate.exception.course.CourseRequestTypeInvalidException;
+import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.course.request.memo.CourseMemoDto;
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
@@ -57,7 +58,7 @@ public class CourseService {
     public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         List<PlaceWrapperResponseDto> places = new ArrayList<>();
-        List<String> memos = null;
+        List<CourseMemoDto> memos = null;
         int totalCost = 0;
         Course course = courseRepository.save(
                 Course.builder()
@@ -76,10 +77,12 @@ public class CourseService {
         if (courseRequestDto.getMemos() != null) {
             memos = new ArrayList<>();
             for (CourseMemoDto memo : courseRequestDto.getMemos())
-                memos.add(courseMemoRepository.save(CourseMemo.builder()
-                        .course(course)
-                        .type(memo.getType())
-                        .content(memo.getContent()).build()).getContent());
+                memos.add(new CourseMemoDto(
+                        courseMemoRepository.save(CourseMemo.builder()
+                                .course(course)
+                                .type(memo.getType())
+                                .content(memo.getContent()).build()
+                        )));
         }
 
 
@@ -116,16 +119,11 @@ public class CourseService {
             course.setLikeNum(course.getLikeNum() + 1);
             course.getUser().setLikeNum(course.getUser().getLikeNum() + 1);
         }
-
-        /**
-         * 행알이의 추가 코드
-         */
         return course.getLikeNum();
     }
 
     /**
      * 코스 신고
-     * 행알이의 추가코드
      */
     public void reportCourse(Long id, CourseReportType type) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
@@ -148,7 +146,6 @@ public class CourseService {
 
     /**
      * 코스 신고 횟수 체크
-     * 행알이가 추가한 코드
      */
     private void checkReportNum(Course course, int reportNum) {
         if (reportNum == 5)
@@ -159,20 +156,20 @@ public class CourseService {
      * 나와 연관된 코스정보
      */
     @Transactional
-    public List<CourseResponseDto> findUserRelatedCourse(Long id, CourseRequestType type, int page, int offset) {
+    public List<CourseResponseDto> findUserRelatedCourse(Long id, CourseSearchType type, int page, int offset) {
         User user = userRepository.findById(id).orElseThrow(UserNotExistException::new);
         List<CourseResponseDto> returnCourseList = new ArrayList<>();
-        if (type.equals(CourseRequestType.LIKE)) {
+        if (type.equals(CourseSearchType.LIKE)) {
             List<CourseOnly> courseList = courseLikeRepository.findAllByUser(user, new CommonPage(page, offset));
             for (CourseOnly course : courseList)
                 returnCourseList.add(new CourseResponseDto(course.getCourse()));
 
-        } else if (type.equals(CourseRequestType.WRITE)) {
+        } else if (type.equals(CourseSearchType.WRITE)) {
             List<Course> courseList = courseRepository.findAllByUser(user, new CommonPage(page, offset));
             for (Course course : courseList)
                 returnCourseList.add(new CourseResponseDto(course));
         } else
-            throw new CourseRequestTypeWrongException();
+            throw new CourseSearchTypeWrongException();
         return returnCourseList;
     }
 
@@ -180,12 +177,12 @@ public class CourseService {
      * 코스 검색
      */
     @Transactional
-    public List<CourseResponseDto> searchCourse(String keyWord, CourseRequestType type, int page, int offset) {
-        if (type.equals(CourseRequestType.WRITE)) {
+    public List<CourseResponseDto> searchCourse(String keyWord, CourseSearchType type, int page, int offset) {
+        if (type.equals(CourseSearchType.WRITE)) {
             return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
-        } else if (type.equals(CourseRequestType.MONEY)) {
+        } else if (type.equals(CourseSearchType.MONEY)) {
             return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
-        } else if (type.equals(CourseRequestType.TAG)) {
+        } else if (type.equals(CourseSearchType.TAG)) {
             return null;
         } else {
             return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord, keyWord, new CommonPage(page, offset), CourseShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
@@ -200,6 +197,22 @@ public class CourseService {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         Course course = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
         return new CourseResponseDetailDto(course, user);
+    }
+
+    /**
+     * 코스 리스트 리턴(최신순,좋아요 순)
+     */
+    @Transactional
+    public List<CourseResponseDto> basicCourseList(CourseRequestType type, int page, int offset) {
+        if (type == CourseRequestType.LATEST) {
+            return courseRepository.findAllByShareType(CourseShareType.PUBLIC, new CommonPage(page, offset))
+                    .stream().map(CourseResponseDto::new).collect(Collectors.toList());
+        } else if (type == CourseRequestType.LIKE) {
+            return courseRepository.findAllByShareTypeAndOrderByLikeNumDesc(CourseShareType.PUBLIC, new CommonPage(page, offset))
+                    .stream().map(CourseResponseDto::new).collect(Collectors.toList());
+        } else {
+            throw new CourseRequestTypeInvalidException();
+        }
     }
 }
 

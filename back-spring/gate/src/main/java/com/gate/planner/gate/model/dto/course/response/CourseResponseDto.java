@@ -1,14 +1,12 @@
 package com.gate.planner.gate.model.dto.course.response;
 
 import com.gate.planner.gate.model.entity.course.Course;
-import com.gate.planner.gate.model.entity.course.CourseRequestType;
 import com.gate.planner.gate.model.entity.course.CourseShareType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Date;
 
