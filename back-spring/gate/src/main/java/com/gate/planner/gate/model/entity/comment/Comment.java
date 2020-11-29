@@ -3,10 +3,7 @@ package com.gate.planner.gate.model.entity.comment;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.util.DateUtil;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Comment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String content;
