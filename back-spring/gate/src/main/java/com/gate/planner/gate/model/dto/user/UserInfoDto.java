@@ -34,6 +34,8 @@ public class UserInfoDto {
     public UserInfoDto(ProfileApiDto profileApiDto, User user) {
         this.userInfo = profileApiDto;
         this.likeNum = user.getLikeNum();
-        
+        this.nickName = user.getNickName();
+        this.birth = user.getBirth();
+        this.gender = user.getGender();
     }
 }
