@@ -1,9 +1,9 @@
 package com.gate.planner.gate;
 
-import com.gate.planner.gate.exception.auth.NickNameAlreadyExistException;
 import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
 import com.gate.planner.gate.factory.CommonFactory;
 import com.gate.planner.gate.model.entity.course.CourseSearchType;
+import com.gate.planner.gate.service.auth.AuthService;
 import com.gate.planner.gate.service.user.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +21,9 @@ import java.text.ParseException;
 public class UserTest extends CommonFactory {
     @Autowired
     UserService userService;
+
+    @Autowired
+    AuthService authService;
 
     @BeforeEach
     public void setJwtToken() throws ParseException {
@@ -44,11 +47,8 @@ public class UserTest extends CommonFactory {
     @Test
     public void updateNickTest() throws ParseException {
         Assertions.assertAll(
-                () -> Assertions.assertThrows(NickNameAlreadyExistException.class,
-                        () -> userService.updateNickName(userFactory.getNickName()),
-                        "이미 존재하는 닉네임 입니다."),
-                () -> Assertions.assertDoesNotThrow(() ->
-                        Assertions.assertEquals(userFactory.getNewNick(), userService.updateNickName(userFactory.getNewNick()))),
+                () -> Assertions.assertTrue(() -> authService.checkNickNameExist(userFactory.getNewNick())),
+                () -> Assertions.assertDoesNotThrow(() -> Assertions.assertEquals(userFactory.getNewNick(), userService.updateNickName(userFactory.getNewNick()))),
                 () -> Assertions.assertDoesNotThrow(() ->
                         Assertions.assertNotEquals(userFactory.findUser(userFactory.getId()).getNickName(), userFactory.getNickName()))
         );

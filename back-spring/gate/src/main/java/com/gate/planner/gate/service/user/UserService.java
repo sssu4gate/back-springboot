@@ -2,7 +2,6 @@ package com.gate.planner.gate.service.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gate.planner.gate.dao.user.UserRepository;
-import com.gate.planner.gate.exception.auth.NickNameAlreadyExistException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.user.UserInfoDto;
@@ -42,10 +41,7 @@ public class UserService {
      */
     public String updateNickName(String newNick) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
-        if (!userRepository.existsByNickName(newNick)) {
-            user.setNickName(newNick);
-            return newNick;
-        } else
-            throw new NickNameAlreadyExistException();
+        user.setNickName(newNick);
+        return newNick;
     }
 }
