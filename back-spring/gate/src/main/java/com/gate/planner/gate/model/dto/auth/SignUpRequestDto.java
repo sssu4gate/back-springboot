@@ -3,12 +3,15 @@ package com.gate.planner.gate.model.dto.auth;
 import com.gate.planner.gate.model.entity.user.Gender;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+
 @ApiModel
 @Getter
+@AllArgsConstructor
 public class SignUpRequestDto {
 
     @ApiModelProperty("유저 식별자")
@@ -23,4 +26,5 @@ public class SignUpRequestDto {
     String accessToken;
     @ApiModelProperty("카카오 RefreshToken")
     String refreshToken;
+
 }

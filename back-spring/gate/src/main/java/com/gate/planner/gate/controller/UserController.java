@@ -31,8 +31,8 @@ public class UserController {
     }
 
     @ApiOperation("닉네임 수정")
-    @PutMapping("/info/profile/update")
-    public void updateProfile(@RequestParam String newNick) {
-        userService.updateProfile(newNick);
+    @PutMapping("/info/nickname")
+    public String updateProfile(@RequestParam String newNick) {
+        return userService.updateNickName(newNick);
     }
 }

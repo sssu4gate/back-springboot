@@ -2,6 +2,7 @@ package com.gate.planner.gate.service.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gate.planner.gate.dao.user.UserRepository;
+import com.gate.planner.gate.exception.auth.NickNameAlreadyExistException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.user.UserInfoDto;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -26,10 +26,12 @@ public class UserService {
     private final CourseService courseService;
     private final ApiService apiService;
 
-    public List<CourseResponseDto> findUserRelatedPost(@RequestParam int page, @RequestParam CourseSearchType type, @RequestParam int offset) {
+    @Transactional
+    public List<CourseResponseDto> findUserRelatedPost(int page, CourseSearchType type, int offset) {
         return courseService.findUserRelatedCourse(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()), type, page, offset);
     }
 
+    @Transactional
     public UserInfoDto findProfile() throws JsonProcessingException {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         return new UserInfoDto(apiService.callUserInfoAPI(user.getAccessToken(), user.getRefreshToken()), user);
@@ -38,8 +40,12 @@ public class UserService {
     /**
      * 우선은 닉네임만 변경
      */
-    public void updateProfile(@RequestParam String newNick){
+    public String updateNickName(String newNick) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
-        user.setNickName(newNick);
+        if (!userRepository.existsByNickName(newNick)) {
+            user.setNickName(newNick);
+            return newNick;
+        } else
+            throw new NickNameAlreadyExistException();
     }
 }
