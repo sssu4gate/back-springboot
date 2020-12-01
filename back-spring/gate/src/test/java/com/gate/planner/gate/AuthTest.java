@@ -2,6 +2,7 @@ package com.gate.planner.gate;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.gate.planner.gate.controller.AuthController;
 import com.gate.planner.gate.factory.CommonFactory;
 import com.gate.planner.gate.model.dto.auth.LoginRequestDto;
 import com.gate.planner.gate.security.JwtProvider;
@@ -22,14 +23,17 @@ public class AuthTest extends CommonFactory {
     AuthService authService;
 
     @Autowired
+    AuthController authController;
+
+    @Autowired
     JwtProvider jwtProvider;
 
     /**
-     *회원가입 테스트, 카카오 AccessToken과 RefreshToken은 받을수 없기 때문에 null 값으로
+     * 회원가입 테스트, 카카오 AccessToken과 RefreshToken은 받을수 없기 때문에 null 값으로
      */
     @Test
     public void signUpTest() throws ParseException {
-        Assertions.assertDoesNotThrow(() -> authService.signUp(userFactory.returnSignUpRequestDto()));
+        Assertions.assertDoesNotThrow(() -> authController.signUp(userFactory.returnSignUpRequestDto()));
     }
 
     /**
@@ -54,7 +58,7 @@ public class AuthTest extends CommonFactory {
     @Test
     public void loginTest() throws JsonProcessingException {
         LoginRequestDto loginRequestDto = new LoginRequestDto(null, null);
-        Assertions.assertThrows(Exception.class, () -> authService.login(loginRequestDto), "올바르지 않은 토큰입니다(카카오)");
+        Assertions.assertThrows(Exception.class, () -> authController.login(loginRequestDto), "올바르지 않은 토큰입니다(카카오)");
     }
 
 

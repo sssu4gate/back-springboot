@@ -1,5 +1,7 @@
 package com.gate.planner.gate;
 
+import com.gate.planner.gate.controller.AuthController;
+import com.gate.planner.gate.controller.UserController;
 import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
 import com.gate.planner.gate.factory.CommonFactory;
 import com.gate.planner.gate.model.entity.course.CourseSearchType;
@@ -19,6 +21,13 @@ import java.text.ParseException;
 @SpringBootTest
 @Transactional
 public class UserTest extends CommonFactory {
+
+    @Autowired
+    AuthController authController;
+
+    @Autowired
+    UserController userController;
+
     @Autowired
     UserService userService;
 
@@ -35,11 +44,11 @@ public class UserTest extends CommonFactory {
     public void findUserRelatedPostTest() {
         Assertions.assertAll(
                 () -> Assertions.assertDoesNotThrow(() ->
-                        Assertions.assertNotNull(userService.findUserRelatedPost(1, CourseSearchType.LIKE, 5))),
+                        Assertions.assertNotNull(userController.userRelatedCourse(CourseSearchType.LIKE, 1, 5))),
                 () -> Assertions.assertDoesNotThrow(() ->
-                        Assertions.assertNotNull(userService.findUserRelatedPost(1, CourseSearchType.WRITE, 5))),
+                        Assertions.assertNotNull(userController.userRelatedCourse(CourseSearchType.WRITE, 1, 5))),
                 () -> Assertions.assertThrows(CourseSearchTypeWrongException.class,
-                        () -> userService.findUserRelatedPost(1, CourseSearchType.PLACE, 5),
+                        () -> userController.userRelatedCourse(CourseSearchType.PLACE, 1, 5),
                         "올바르지 않은 요청 타입입니다.")
         );
     }
@@ -47,8 +56,8 @@ public class UserTest extends CommonFactory {
     @Test
     public void updateNickTest() throws ParseException {
         Assertions.assertAll(
-                () -> Assertions.assertTrue(() -> authService.checkNickNameExist(userFactory.getNewNick())),
-                () -> Assertions.assertDoesNotThrow(() -> Assertions.assertEquals(userFactory.getNewNick(), userService.updateNickName(userFactory.getNewNick()))),
+                () -> Assertions.assertTrue(() -> authController.checkNickNameExist(userFactory.getNewNick())),
+                () -> Assertions.assertDoesNotThrow(() -> Assertions.assertEquals(userFactory.getNewNick(), userController.updateNickName(userFactory.getNewNick()))),
                 () -> Assertions.assertDoesNotThrow(() ->
                         Assertions.assertNotEquals(userFactory.findUser(userFactory.getId()).getNickName(), userFactory.getNickName()))
         );

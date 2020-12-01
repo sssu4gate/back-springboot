@@ -32,7 +32,7 @@ public class UserController {
 
     @ApiOperation("닉네임 수정")
     @PutMapping("/info/nickname")
-    public String updateProfile(@RequestParam String newNick) {
+    public String updateNickName(@RequestParam String newNick) {
         return userService.updateNickName(newNick);
     }
 }

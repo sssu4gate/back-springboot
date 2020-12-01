@@ -1,5 +1,6 @@
 package com.gate.planner.gate;
 
+import com.gate.planner.gate.controller.CourseController;
 import com.gate.planner.gate.factory.CommonFactory;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.service.comment.CommentService;
@@ -15,6 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 public class CommentTest extends CommonFactory {
+
+    @Autowired
+    CourseController courseController;
+
     @Autowired
     CommentService commentService;
 
@@ -30,7 +35,7 @@ public class CommentTest extends CommonFactory {
         Assertions.assertAll(
                 () -> {
                     Course course = courseFactory.returnSaveCourse();
-                    Assertions.assertDoesNotThrow(() -> commentService.saveComment(course.getId(), commentFactory.getContent()));
+                    Assertions.assertDoesNotThrow(() -> courseController.writeComment(course.getId(), commentFactory.getContent()));
                 }
         );
     }
@@ -42,7 +47,7 @@ public class CommentTest extends CommonFactory {
                     Course course = courseFactory.returnSaveCourse();
                     Long commentId = commentService.saveComment(course.getId(), commentFactory.getContent());
                     Assertions.assertEquals(1, commentFactory.findCommentAtDB().size());
-                    Assertions.assertDoesNotThrow(() -> commentService.deleteComment(commentId));
+                    Assertions.assertDoesNotThrow(() -> courseController.deleteComment(course.getId(), commentId));
                     Assertions.assertNotEquals(1, commentFactory.findCommentAtDB().size());
                 }
         );
@@ -54,8 +59,8 @@ public class CommentTest extends CommonFactory {
                 () -> {
                     Course course = courseFactory.returnSaveCourse();
                     Long commentId = commentService.saveComment(course.getId(), commentFactory.getContent());
-                    Assertions.assertDoesNotThrow(() -> commentService.modifyComment(commentId, commentFactory.getUpdateContent()));
-                    Assertions.assertEquals(commentFactory.getUpdateContent(),commentFactory.findCommentAtDB().get(0).getContent());
+                    Assertions.assertDoesNotThrow(() -> courseController.updateComment(course.getId(), commentId, commentFactory.getUpdateContent()));
+                    Assertions.assertEquals(commentFactory.getUpdateContent(), commentFactory.findCommentAtDB().get(0).getContent());
                 }
         );
     }

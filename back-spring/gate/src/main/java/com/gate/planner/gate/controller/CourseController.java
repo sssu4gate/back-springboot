@@ -74,7 +74,7 @@ public class CourseController {
 
     @ApiOperation("댓글 입력하기")
     @PostMapping("/{courseId}/comment/write")
-    public void postComment(@PathVariable Long courseId, @RequestBody String content) {
+    public void writeComment(@PathVariable Long courseId, @RequestBody String content) {
         commentService.saveComment(courseId, content);
     }
 

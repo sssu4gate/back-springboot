@@ -1,7 +1,7 @@
 package com.gate.planner.gate;
 
+import com.gate.planner.gate.controller.SearchController;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
-import com.gate.planner.gate.service.api.ApiService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,13 @@ import java.util.ArrayList;
 @Transactional
 public class ApiTest {
     @Autowired
-    ApiService apiService;
+    SearchController searchController;
 
     @Test
     void requestApiTest() throws IOException {
         //중간에 에러가 발생하면 안됨
         ArrayList<PlaceDto> placeList =
-                Assertions.assertDoesNotThrow(() -> apiService.callLocationAPI(1, "숭실대학교", 10));
+                Assertions.assertDoesNotThrow(() -> searchController.getPlaceSearchResult("숭실대학교", 1, 10));
 
         //정상적인 요청일 경우 size가 0이면 안됨.
         Assertions.assertNotEquals(placeList.size(), 0);
