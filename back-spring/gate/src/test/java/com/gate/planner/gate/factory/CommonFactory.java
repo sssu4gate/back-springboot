@@ -9,4 +9,10 @@ public class CommonFactory {
     @Autowired
     public UserFactory userFactory;
 
+    @Autowired
+    public PlaceFactory placeFactory;
+
+    @Autowired
+    public CourseFactory courseFactory;
+
 }

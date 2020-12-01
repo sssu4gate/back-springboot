@@ -27,7 +27,7 @@ public class PlaceService {
         place저장
      */
     @Transactional
-    public Place savePlace(PlaceDto placeDto) {
+    private Place savePlace(PlaceDto placeDto) {
         return placeRepository.findById(placeDto.getId())
                 .orElse(placeRepository.save(Place.builder()
                         .id(placeDto.getId())

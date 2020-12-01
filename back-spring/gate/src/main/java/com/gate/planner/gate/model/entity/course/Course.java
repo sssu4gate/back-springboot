@@ -23,6 +23,7 @@ public class Course {
     @Column(nullable = false)
     String title;
 
+    @Lob
     String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

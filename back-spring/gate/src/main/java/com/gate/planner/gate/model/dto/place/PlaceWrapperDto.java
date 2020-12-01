@@ -2,10 +2,12 @@ package com.gate.planner.gate.model.dto.place;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@ApiModel
 @Getter
+@ApiModel
+@AllArgsConstructor
 public class PlaceWrapperDto {
 
     @ApiModelProperty("Place의 식별자")
