@@ -4,7 +4,7 @@ import com.gate.planner.gate.dao.place.PlaceRepository;
 import com.gate.planner.gate.dao.place.PlaceWrapperRepository;
 import com.gate.planner.gate.exception.place.PlaceNotExistException;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
-import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
+import com.gate.planner.gate.model.dto.place.PlaceWrapperRequestDto;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.place.Coordinate;
 import com.gate.planner.gate.model.entity.place.Place;
@@ -54,13 +54,13 @@ public class PlaceService {
         코스에 저장할 PlaceWrapper(Place + 기타 정보들)을 저장
      */
     @Transactional
-    public PlaceWrapper savePlaceWrapper(PlaceWrapperDto placeWrapperDto, Course course) {
-        Place place = placeRepository.findById(placeWrapperDto.getId()).orElseThrow(PlaceNotExistException::new);
+    public PlaceWrapper savePlaceWrapper(PlaceWrapperRequestDto placeWrapperRequestDto, Course course) {
+        Place place = placeRepository.findById(placeWrapperRequestDto.getId()).orElseThrow(PlaceNotExistException::new);
         return placeWrapperRepository.save(PlaceWrapper.builder()
                 .place(place)
                 .course(course)
-                .cost(placeWrapperDto.getCost())
-                .time(placeWrapperDto.getTime())
+                .cost(placeWrapperRequestDto.getCost())
+                .time(placeWrapperRequestDto.getTime())
                 .build());
     }
 }

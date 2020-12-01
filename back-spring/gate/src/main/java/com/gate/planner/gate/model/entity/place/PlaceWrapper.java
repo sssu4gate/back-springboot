@@ -4,6 +4,7 @@ import com.gate.planner.gate.model.entity.course.Course;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -15,8 +16,10 @@ public class PlaceWrapper {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Setter
     int cost;
 
+    @Setter
     String time;
 
     @ManyToOne

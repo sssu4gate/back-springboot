@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course {
@@ -30,7 +31,6 @@ public class Course {
     @JoinColumn(nullable = false)
     User user;
 
-    @Setter
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<PlaceWrapper> places = new ArrayList<>();
 
@@ -44,10 +44,8 @@ public class Course {
     @OneToMany(mappedBy = "course")
     List<CourseMemo> memos;
 
-    @Setter
     int commentNum = 0;
 
-    @Setter
     int likeNum = 0;
 
     int totalCost = 0;
@@ -55,14 +53,12 @@ public class Course {
     /**
      * 행알이의 추가 코드
      */
-    @Setter
     int reportNum = 0;
 
     /**
      * 행알이가 추가한 코드
      * 신고 횟수 5번 이상 인지 체크
      */
-    @Setter
     boolean reportFlag = false;
 
     @Builder

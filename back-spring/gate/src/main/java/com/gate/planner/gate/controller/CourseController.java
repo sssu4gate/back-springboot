@@ -55,4 +55,10 @@ public class CourseController {
     public List<CourseResponseDto> responseBasicCourseList(@RequestParam CourseRequestType type, @RequestParam int page, @RequestParam int offset) {
         return courseService.basicCourseList(type, page, offset);
     }
+
+    @ApiOperation("코스 수정")
+    @PutMapping("/{id}")
+    public CourseResponseDetailDto updateCourse(@PathVariable Long id, @RequestBody CourseRequestDto courseRequestDto) {
+        return courseService.updateCourse(id, courseRequestDto);
+    }
 }

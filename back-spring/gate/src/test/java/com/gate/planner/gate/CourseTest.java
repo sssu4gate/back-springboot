@@ -49,7 +49,7 @@ public class CourseTest extends CommonFactory {
                 () -> Assertions.assertDoesNotThrow(() -> courseService.saveCourse(courseRequestDto)),
                 () -> Assertions.assertDoesNotThrow(() -> {
                     Assertions.assertNotEquals(0,
-                            courseRepository.findAllByUser_NickNameAndShareType(userFactory.getNickName(), new CommonPage(0, 5), ShareType.PUBLIC).size()
+                            courseRepository.findAllByUser_NickNameAndShareTypeAndReportFlagIsFalse(userFactory.getNickName(), new CommonPage(0, 5), ShareType.PUBLIC).size()
                     );
                 })
         );

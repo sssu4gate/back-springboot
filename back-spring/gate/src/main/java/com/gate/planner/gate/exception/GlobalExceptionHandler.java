@@ -6,7 +6,9 @@ import com.gate.planner.gate.exception.auth.UserNameAlreadyExistException;
 import com.gate.planner.gate.exception.course.CourseNotExistException;
 import com.gate.planner.gate.exception.course.CourseRequestTypeInvalidException;
 import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
+import com.gate.planner.gate.exception.course.CourseUpdateDenyException;
 import com.gate.planner.gate.exception.place.PlaceNotExistException;
+import com.gate.planner.gate.exception.place.PlaceWrapperNotExistException;
 import com.gate.planner.gate.exception.post.InvalidFileTypeException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import org.springframework.http.HttpStatus;
@@ -21,38 +23,50 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {EmailAlreadyExistException.class, UserNameAlreadyExistException.class, NickNameAlreadyExistException.class})
-    public ExceptionResponse AlreadyExistExceptions(Exception e) {
+    public ExceptionResponse AlreadyExistExceptionsHandler(Exception e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = UserNotExistException.class)
-    public ExceptionResponse UserNotExistException(UserNotExistException e) {
+    public ExceptionResponse UserNotExistExceptionHandler(UserNotExistException e) {
         return new ExceptionResponse(HttpStatus.NOT_FOUND, e);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = InvalidFileTypeException.class)
-    public ExceptionResponse InvalidFiletTypeException(InvalidFileTypeException e) {
+    public ExceptionResponse InvalidFiletTypeExceptionHandler(InvalidFileTypeException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = PlaceNotExistException.class)
-    public ExceptionResponse PlaceNotExistException(PlaceNotExistException e) {
+    public ExceptionResponse PlaceNotExistExceptionHandler(PlaceNotExistException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {CourseNotExistException.class, CourseSearchTypeWrongException.class})
-    public ExceptionResponse CourseNotExistException(CourseNotExistException e) {
+    public ExceptionResponse CourseNotExistExceptionHandler(CourseNotExistException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = CourseRequestTypeInvalidException.class)
-    public ExceptionResponse CourseRequestTypeInvalidException(CourseRequestTypeInvalidException e) {
+    public ExceptionResponse CourseRequestTypeInvalidExceptionHandler(CourseRequestTypeInvalidException e) {
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = PlaceWrapperNotExistException.class)
+    public ExceptionResponse PlaceWrapperNotExistExceptionHandler(PlaceWrapperNotExistException e) {
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = CourseUpdateDenyException.class)
+    public ExceptionResponse CourseUpdateDenyExceptionHandler(CourseUpdateDenyException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 }

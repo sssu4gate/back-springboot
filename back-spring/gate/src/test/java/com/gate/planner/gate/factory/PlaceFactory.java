@@ -3,7 +3,7 @@ package com.gate.planner.gate.factory;
 import com.gate.planner.gate.dao.place.PlaceRepository;
 import com.gate.planner.gate.exception.place.PlaceNotExistException;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
-import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
+import com.gate.planner.gate.model.dto.place.PlaceWrapperRequestDto;
 import com.gate.planner.gate.model.entity.place.Place;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,8 +24,8 @@ public class PlaceFactory {
     private String category_name = "교육,학문 > 학교 > 대학교";
 
 
-    public PlaceWrapperDto returnPlaceWrapperDto() {
-        return new PlaceWrapperDto(id, 5000, "12:00~13:00");
+    public PlaceWrapperRequestDto returnPlaceWrapperDto() {
+        return new PlaceWrapperRequestDto(id, 5000, "12:00~13:00");
     }
 
     public Place findPlaceById(Long id) {
@@ -36,10 +36,10 @@ public class PlaceFactory {
         return placeRepository.findAll();
     }
 
-    public List<PlaceWrapperDto> returnPlaceWrapperDtoList() {
-        ArrayList<PlaceWrapperDto> placeWrappers = new ArrayList<>();
-        PlaceWrapperDto placeWrapperDto = new PlaceWrapperDto(id, 5000, "1200~1300");
-        placeWrappers.add(placeWrapperDto);
+    public List<PlaceWrapperRequestDto> returnPlaceWrapperDtoList() {
+        ArrayList<PlaceWrapperRequestDto> placeWrappers = new ArrayList<>();
+        PlaceWrapperRequestDto placeWrapperRequestDto = new PlaceWrapperRequestDto(id, 5000, "1200~1300");
+        placeWrappers.add(placeWrapperRequestDto);
 
         return placeWrappers;
     }

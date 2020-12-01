@@ -7,18 +7,16 @@ import com.gate.planner.gate.dao.course.CourseReportRepository;
 import com.gate.planner.gate.dao.course.CourseRepository;
 import com.gate.planner.gate.dao.course.projection.CourseOnly;
 import com.gate.planner.gate.dao.place.PlaceRepository;
+import com.gate.planner.gate.dao.place.PlaceWrapperRepository;
 import com.gate.planner.gate.dao.user.UserRepository;
-import com.gate.planner.gate.exception.course.AlreadyReportedException;
-import com.gate.planner.gate.exception.course.CourseNotExistException;
-import com.gate.planner.gate.exception.course.CourseRequestTypeInvalidException;
-import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
+import com.gate.planner.gate.exception.course.*;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.course.request.CourseMemoRequestDto;
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
 import com.gate.planner.gate.model.dto.course.response.CourseMemoResponseDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDetailDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
-import com.gate.planner.gate.model.dto.place.PlaceWrapperDto;
+import com.gate.planner.gate.model.dto.place.PlaceWrapperRequestDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.course.CourseRequestType;
@@ -51,6 +49,7 @@ public class CourseService {
     private final PlaceService placeService;
     private final UserRepository userRepository;
     private final CourseLikeRepository courseLikeRepository;
+    private final PlaceWrapperRepository placeWrapperRepository;
     /**
      * 행알이가 추가한 코드>3<
      */
@@ -75,11 +74,12 @@ public class CourseService {
                         .user(user).build());
 
 
-        for (PlaceWrapperDto placeWrapperDto : courseRequestDto.getPlaces()) {
-            PlaceWrapper placeWrapper = placeService.savePlaceWrapper(placeWrapperDto, course);
+        for (PlaceWrapperRequestDto placeWrapperRequestDto : courseRequestDto.getPlaces()) {
+            PlaceWrapper placeWrapper = placeService.savePlaceWrapper(placeWrapperRequestDto, course);
             totalCost += placeWrapper.getCost();
             places.add(new PlaceWrapperResponseDto(placeWrapper));
         }
+        course.setTotalCost(totalCost);
 
         if (courseRequestDto.getMemos() != null) {
             memos = new ArrayList<>();
@@ -107,6 +107,37 @@ public class CourseService {
                 .totalCost(course.getTotalCost())
                 .memos(memos)
                 .places(places).build();
+    }
+
+    @Transactional
+    public CourseResponseDetailDto updateCourse(Long id, CourseRequestDto courseRequestDto) {
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
+        Course updateCourse = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
+        List<PlaceWrapperResponseDto> places = new ArrayList<>();
+        int totalCost = 0;
+
+        if (user.equals(updateCourse.getUser())) {
+            deletePlaceWrapperAndMemo(updateCourse);
+            for (PlaceWrapperRequestDto placeWrapperRequestDto : courseRequestDto.getPlaces()) {
+                PlaceWrapper placeWrapper = placeService.savePlaceWrapper(placeWrapperRequestDto, updateCourse);
+                totalCost += placeWrapper.getCost();
+                places.add(new PlaceWrapperResponseDto(placeWrapper));
+            }
+            updateCourse.setTotalCost(totalCost);
+
+            if (courseRequestDto.getMemos() != null) {
+                CourseMemo courseMemo = null;
+                for (CourseMemoRequestDto memo : courseRequestDto.getMemos()) {
+                    courseMemo = courseMemoRepository.save(CourseMemo.builder()
+                            .course(updateCourse)
+                            .type(memo.getType())
+                            .content(memo.getContent()).build());
+                }
+            }
+            return new CourseResponseDetailDto(updateCourse, user);
+        } else
+            throw new CourseUpdateDenyException();
+
     }
 
     /**
@@ -189,13 +220,13 @@ public class CourseService {
     @Transactional
     public List<CourseResponseDto> searchCourse(String keyWord, CourseSearchType type, int page, int offset) {
         if (type.equals(CourseSearchType.WRITE)) {
-            return courseRepository.findAllByUser_NickNameAndShareType(keyWord, new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findAllByUser_NickNameAndShareTypeAndReportFlagIsFalse(keyWord, new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type.equals(CourseSearchType.MONEY)) {
-            return courseRepository.findAllByTotalCostIsLessThanEqualAndShareType(Integer.parseInt(keyWord), new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findAllByTotalCostIsLessThanEqualAndShareTypeAndReportFlagIsFalse(Integer.parseInt(keyWord), new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type.equals(CourseSearchType.TAG)) {
             return null;
         } else {
-            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareType(keyWord, keyWord, new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findDistinctByTitleContainingOrContentContainingAndShareTypeAndReportFlagIsFalse(keyWord, keyWord, new CommonPage(page, offset), ShareType.PUBLIC).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         }
     }
 
@@ -215,14 +246,21 @@ public class CourseService {
     @Transactional
     public List<CourseResponseDto> basicCourseList(CourseRequestType type, int page, int offset) {
         if (type == CourseRequestType.LATEST) {
-            return courseRepository.findAllByShareType(ShareType.PUBLIC, new CommonPage(page, offset))
+            return courseRepository.findAllByShareTypeAndReportFlagIsFalse(ShareType.PUBLIC, new CommonPage(page, offset))
                     .stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type == CourseRequestType.LIKE) {
-            return courseRepository.findAllByShareTypeOrderByLikeNumDesc(ShareType.PUBLIC, new CommonPage(page, offset))
+            return courseRepository.findAllByShareTypeAndReportFlagIsFalseOrderByLikeNumDesc(ShareType.PUBLIC, new CommonPage(page, offset))
                     .stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else {
             throw new CourseRequestTypeInvalidException();
         }
+    }
+
+    private void deletePlaceWrapperAndMemo(Course course) {
+        for (PlaceWrapper placeWrapper : course.getPlaces())
+            placeWrapperRepository.delete(placeWrapper);
+        for (CourseMemo courseMemo : course.getMemos())
+            courseMemoRepository.delete(courseMemo);
     }
 }
 
