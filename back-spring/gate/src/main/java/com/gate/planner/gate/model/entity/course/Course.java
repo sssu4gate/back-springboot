@@ -41,7 +41,7 @@ public class Course {
 
     Date createdAt = DateUtil.toAsiaTimeZone();
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course",cascade = CascadeType.REMOVE)
     List<CourseMemo> memos;
 
     int commentNum = 0;

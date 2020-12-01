@@ -15,4 +15,7 @@ public class CommonFactory {
     @Autowired
     public CourseFactory courseFactory;
 
+    @Autowired
+    public CommentFactory commentFactory;
+
 }

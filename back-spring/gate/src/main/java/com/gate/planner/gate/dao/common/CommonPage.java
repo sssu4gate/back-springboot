@@ -5,6 +5,6 @@ import org.springframework.data.domain.Sort;
 
 public class CommonPage extends PageRequest {
     public CommonPage(int page, int offset) {
-        super(page, offset, Sort.by("id").descending());
+        super(page - 1, offset, Sort.by("id").descending());
     }
 }

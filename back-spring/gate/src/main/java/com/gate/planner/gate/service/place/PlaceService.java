@@ -26,7 +26,6 @@ public class PlaceService {
     /*
         place저장
      */
-    @Transactional
     private Place savePlace(PlaceDto placeDto) {
         return placeRepository.findById(placeDto.getId())
                 .orElse(placeRepository.save(Place.builder()
@@ -40,7 +39,6 @@ public class PlaceService {
     /*
        코스 저장 시에 필요한 1차적인 장소 List에 담아서 반환
     */
-    @Transactional
     public List<PlaceDto> decideCoursePlaces(List<PlaceDto> places) {
         ArrayList<PlaceDto> returnPlaceList = new ArrayList<>();
 
@@ -53,7 +51,6 @@ public class PlaceService {
     /*
         코스에 저장할 PlaceWrapper(Place + 기타 정보들)을 저장
      */
-    @Transactional
     public PlaceWrapper savePlaceWrapper(PlaceWrapperRequestDto placeWrapperRequestDto, Course course) {
         Place place = placeRepository.findById(placeWrapperRequestDto.getId()).orElseThrow(PlaceNotExistException::new);
         return placeWrapperRepository.save(PlaceWrapper.builder()

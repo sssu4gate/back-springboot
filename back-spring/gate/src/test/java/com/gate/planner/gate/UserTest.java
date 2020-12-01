@@ -35,11 +35,11 @@ public class UserTest extends CommonFactory {
     public void findUserRelatedPostTest() {
         Assertions.assertAll(
                 () -> Assertions.assertDoesNotThrow(() ->
-                        Assertions.assertNotNull(userService.findUserRelatedPost(0, CourseSearchType.LIKE, 5))),
+                        Assertions.assertNotNull(userService.findUserRelatedPost(1, CourseSearchType.LIKE, 5))),
                 () -> Assertions.assertDoesNotThrow(() ->
-                        Assertions.assertNotNull(userService.findUserRelatedPost(0, CourseSearchType.WRITE, 5))),
+                        Assertions.assertNotNull(userService.findUserRelatedPost(1, CourseSearchType.WRITE, 5))),
                 () -> Assertions.assertThrows(CourseSearchTypeWrongException.class,
-                        () -> userService.findUserRelatedPost(0, CourseSearchType.PLACE, 5),
+                        () -> userService.findUserRelatedPost(1, CourseSearchType.PLACE, 5),
                         "올바르지 않은 요청 타입입니다.")
         );
     }

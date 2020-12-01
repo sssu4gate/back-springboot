@@ -1,10 +1,12 @@
 package com.gate.planner.gate.controller;
 
+import com.gate.planner.gate.model.dto.comment.response.CommentResponseDto;
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDetailDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.entity.course.CourseRequestType;
 import com.gate.planner.gate.model.entity.course.report.CourseReportType;
+import com.gate.planner.gate.service.comment.CommentService;
 import com.gate.planner.gate.service.course.CourseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +60,33 @@ public class CourseController {
 
     @ApiOperation("코스 수정")
     @PutMapping("/{id}")
-    public CourseResponseDetailDto updateCourse(@PathVariable Long id, @RequestBody CourseRequestDto courseRequestDto) {
+    public CourseResponseDetailDto updateCourse(@PathVariable Long id, @RequestBody CourseRequestDto courseRequestDto) throws ParseException {
         return courseService.updateCourse(id, courseRequestDto);
+    }
+
+    private final CommentService commentService;
+
+    @ApiOperation("코스랑 관련된 댓글 전부 가져오기")
+    @GetMapping("/{courseId}/comment")
+    public List<CommentResponseDto> getComment(@PathVariable Long courseId) {
+        return commentService.getComment(courseId);
+    }
+
+    @ApiOperation("댓글 입력하기")
+    @PostMapping("/{courseId}/comment/write")
+    public void postComment(@PathVariable Long courseId, @RequestBody String content) {
+        commentService.saveComment(courseId, content);
+    }
+
+    @ApiOperation("댓글 삭제")
+    @DeleteMapping("/{courseId}/comment/{commentId}")
+    public void deleteComment(@PathVariable Long courseId, @PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+    }
+
+    @ApiOperation("댓글 수정")
+    @PutMapping("/{courseId}/comment/{commentId}")
+    public void updateComment(@PathVariable Long courseId, @PathVariable Long commentId, @RequestBody String content) {
+        commentService.modifyComment(commentId, content);
     }
 }

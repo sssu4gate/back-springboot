@@ -73,13 +73,14 @@ public class CourseService {
                         .dateDay(DateUtil.parseDateFormat(courseRequestDto.getDateDay()))
                         .user(user).build());
 
-
-        for (PlaceWrapperRequestDto placeWrapperRequestDto : courseRequestDto.getPlaces()) {
-            PlaceWrapper placeWrapper = placeService.savePlaceWrapper(placeWrapperRequestDto, course);
-            totalCost += placeWrapper.getCost();
-            places.add(new PlaceWrapperResponseDto(placeWrapper));
+        if (courseRequestDto.getPlaces() != null) {
+            for (PlaceWrapperRequestDto placeWrapperRequestDto : courseRequestDto.getPlaces()) {
+                PlaceWrapper placeWrapper = placeService.savePlaceWrapper(placeWrapperRequestDto, course);
+                totalCost += placeWrapper.getCost();
+                places.add(new PlaceWrapperResponseDto(placeWrapper));
+            }
+            course.setTotalCost(totalCost);
         }
-        course.setTotalCost(totalCost);
 
         if (courseRequestDto.getMemos() != null) {
             memos = new ArrayList<>();
@@ -110,25 +111,29 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseResponseDetailDto updateCourse(Long id, CourseRequestDto courseRequestDto) {
+    public CourseResponseDetailDto updateCourse(Long id, CourseRequestDto courseRequestDto) throws ParseException {
+        int totalCost = 0;
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         Course updateCourse = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
-        List<PlaceWrapperResponseDto> places = new ArrayList<>();
-        int totalCost = 0;
+
+        updateCourse.setTitle(courseRequestDto.getCourseName());
+        updateCourse.setContent(courseRequestDto.getContent());
+        updateCourse.setDateDay(DateUtil.parseDateFormat(courseRequestDto.getDateDay()));
+        updateCourse.setShareType(courseRequestDto.getShareType());
 
         if (user.equals(updateCourse.getUser())) {
             deletePlaceWrapperAndMemo(updateCourse);
-            for (PlaceWrapperRequestDto placeWrapperRequestDto : courseRequestDto.getPlaces()) {
-                PlaceWrapper placeWrapper = placeService.savePlaceWrapper(placeWrapperRequestDto, updateCourse);
-                totalCost += placeWrapper.getCost();
-                places.add(new PlaceWrapperResponseDto(placeWrapper));
+            if (updateCourse.getPlaces() != null) {
+                for (PlaceWrapperRequestDto placeWrapperRequestDto : courseRequestDto.getPlaces()) {
+                    PlaceWrapper placeWrapper = placeService.savePlaceWrapper(placeWrapperRequestDto, updateCourse);
+                    totalCost += placeWrapper.getCost();
+                }
+                updateCourse.setTotalCost(totalCost);
             }
-            updateCourse.setTotalCost(totalCost);
 
             if (courseRequestDto.getMemos() != null) {
-                CourseMemo courseMemo = null;
                 for (CourseMemoRequestDto memo : courseRequestDto.getMemos()) {
-                    courseMemo = courseMemoRepository.save(CourseMemo.builder()
+                    courseMemoRepository.save(CourseMemo.builder()
                             .course(updateCourse)
                             .type(memo.getType())
                             .content(memo.getContent()).build());
@@ -257,10 +262,12 @@ public class CourseService {
     }
 
     private void deletePlaceWrapperAndMemo(Course course) {
-        for (PlaceWrapper placeWrapper : course.getPlaces())
-            placeWrapperRepository.delete(placeWrapper);
-        for (CourseMemo courseMemo : course.getMemos())
-            courseMemoRepository.delete(courseMemo);
+        if (course.getPlaces() != null)
+            for (PlaceWrapper placeWrapper : course.getPlaces())
+                placeWrapperRepository.delete(placeWrapper);
+        if (course.getMemos() != null)
+            for (CourseMemo courseMemo : course.getMemos())
+                courseMemoRepository.delete(courseMemo);
     }
 }
 

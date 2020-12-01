@@ -25,7 +25,7 @@ public class PlaceTest extends CommonFactory {
 
     @Test
     public void savePlaceTest() {
-        List<PlaceDto> places = placeFactory.returnPlaceDtoList();
+        List<PlaceDto> places = placeFactory.returnFirstPlaceDtoList();
         Assertions.assertAll(
                 () -> Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(places)),
                 () -> {
@@ -40,7 +40,7 @@ public class PlaceTest extends CommonFactory {
     public void savePlaceWrapperTest() {
         PlaceWrapperRequestDto placeWrapperRequestDto = placeFactory.returnPlaceWrapperDto();
         Assertions.assertAll(
-                () -> Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnPlaceDtoList())),
+                () -> Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnFirstPlaceDtoList())),
                 () -> Assertions.assertDoesNotThrow(() -> placeService.savePlaceWrapper(placeWrapperRequestDto, courseFactory.returnSaveCourse())),
                 () -> Assertions.assertNotEquals(0, placeWrapperRepository.findAll().size())
         );

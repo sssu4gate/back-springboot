@@ -17,11 +17,17 @@ public class DateUtil {
     }
 
     public static Date parseDateFormat(String date) throws ParseException {
-        return format.parse(date);
+        if (date != null)
+            return format.parse(date);
+        else
+            return null;
     }
 
     public static String parseString(Date date) {
-        return format.format(date);
+        if (date != null)
+            return format.format(date);
+        else
+            return null;
     }
 
 }

@@ -3,6 +3,7 @@ package com.gate.planner.gate.factory;
 import com.gate.planner.gate.dao.course.CourseRepository;
 import com.gate.planner.gate.model.dto.course.request.CourseMemoRequestDto;
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
+import com.gate.planner.gate.model.dto.place.PlaceWrapperRequestDto;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.course.ShareType;
 import com.gate.planner.gate.model.entity.course.memo.CourseMemoType;
@@ -30,11 +31,21 @@ public class CourseFactory {
     private String title = "jUnitTestCourse";
     private String content = "jUnitTestContent";
     private User user = null;
-    private Date dateDay = new Date();
+    private Date dateDay = null;
     private ShareType courseShareType = ShareType.PUBLIC;
 
+    private String updateTitle = "jUnitUpdateTestCourse";
+    private String updateContent = "jUnitUpdateTestContent";
+    private ShareType updateCourseShareType = ShareType.PRIVATE;
+
+    public CourseRequestDto returnUpdateCourseRequestDto() {
+        List<PlaceWrapperRequestDto> updatePlaceWrapperList = placeFactory.returnSecondPlaceWrapperDtoList();
+        return new CourseRequestDto(updateTitle, updateContent, "2020-12-01", updatePlaceWrapperList, returnCourseMemoRequestListDto(), updateCourseShareType);
+    }
+
     public CourseRequestDto returnCourseRequestDto() {
-        return new CourseRequestDto(title, content, DateUtil.parseString(dateDay), placeFactory.returnPlaceWrapperDtoList(), returnCourseMemoRequestListDto(), courseShareType);
+        List<PlaceWrapperRequestDto> savePlaceWrapperList = placeFactory.returnFirstPlaceWrapperDtoList();
+        return new CourseRequestDto(title, content, DateUtil.parseString(dateDay), savePlaceWrapperList, returnCourseMemoRequestListDto(), courseShareType);
     }
 
     public Course returnSaveCourse() throws ParseException {

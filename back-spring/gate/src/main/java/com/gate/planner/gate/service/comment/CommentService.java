@@ -5,18 +5,14 @@ import com.gate.planner.gate.dao.course.CourseRepository;
 import com.gate.planner.gate.dao.user.UserRepository;
 import com.gate.planner.gate.exception.course.CourseNotExistException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
-import com.gate.planner.gate.model.dto.comment.request.CommentRequestDto;
 import com.gate.planner.gate.model.dto.comment.response.CommentResponseDto;
-import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.entity.comment.Comment;
-import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,13 +35,14 @@ public class CommentService {
     /**
      * 댓글 입력
      */
-    public Long saveComment(CommentRequestDto commentRequestDto) {
+    @Transactional
+    public Long saveComment(Long courseId, String content) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).
-                orElseThrow(UserNotExistException::new);   // 임시
+                orElseThrow(UserNotExistException::new);
         Comment comment = commentRepository.save(
                 Comment.builder().
-                        content(commentRequestDto.getContent()).
-                        course(courseRepository.findById(commentRequestDto.getCourseId()).orElseThrow(CourseNotExistException::new)).
+                        content(content).
+                        course(courseRepository.findById(courseId).orElseThrow(CourseNotExistException::new)).
                         user(user).
                         build()
         );
