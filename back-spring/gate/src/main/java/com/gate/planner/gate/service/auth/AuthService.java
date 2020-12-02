@@ -14,6 +14,7 @@ import com.gate.planner.gate.service.api.ApiService;
 import com.gate.planner.gate.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Collections;
@@ -55,6 +56,7 @@ public class AuthService {
                 jwtProvider.createRefreshToken(user.getUsername(), user.getRoles()));
     }
 
+    @Transactional
     public LogInResponseDto login(LoginRequestDto loginRequestDto) throws JsonProcessingException {
 
         User user = null;

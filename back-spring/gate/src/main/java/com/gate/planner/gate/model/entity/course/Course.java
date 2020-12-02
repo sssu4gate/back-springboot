@@ -28,7 +28,7 @@ public class Course {
     @Setter
     String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     User user;
 

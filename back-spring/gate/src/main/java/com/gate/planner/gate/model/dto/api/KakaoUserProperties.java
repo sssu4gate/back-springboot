@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @ApiModel
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class KakaoUserProperties {
     @ApiModelProperty("카카오 닉네임")
