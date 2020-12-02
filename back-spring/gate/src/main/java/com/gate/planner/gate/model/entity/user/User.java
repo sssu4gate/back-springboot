@@ -1,7 +1,10 @@
 package com.gate.planner.gate.model.entity.user;
 
 import com.gate.planner.gate.util.DateUtil;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +32,9 @@ public class User implements UserDetails {
     @Setter
     String refreshToken;
 
+    @Setter
+    String imageUrl;
+
     Date birth;
 
     Date createdAt = DateUtil.toAsiaTimeZone();
@@ -43,10 +49,11 @@ public class User implements UserDetails {
     int likeNum;
 
     @Builder
-    public User(Long id, Date birth, String refreshToken, Gender gender, String accessToken, String nickName, List<String> roles) {
+    public User(Long id, Date birth, String imgUrl, String refreshToken, Gender gender, String accessToken, String nickName, List<String> roles) {
         this.id = id;
         this.birth = birth;
         this.gender = gender;
+        this.imageUrl = imgUrl;
         this.refreshToken = refreshToken;
         this.accessToken = accessToken;
         this.nickName = nickName;

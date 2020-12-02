@@ -36,8 +36,8 @@ public class UserTest extends CommonFactory {
 
     @BeforeEach
     public void setJwtToken() throws ParseException {
-        Assertions.assertDoesNotThrow(() -> userFactory.returnSignUpUser());
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userFactory.getId(), ""));
+        Assertions.assertDoesNotThrow(() -> userFactory.returnSignUpUser1());
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userFactory.getId1(), ""));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class UserTest extends CommonFactory {
                 () -> Assertions.assertTrue(() -> authController.checkNickNameExist(userFactory.getNewNick())),
                 () -> Assertions.assertDoesNotThrow(() -> Assertions.assertEquals(userFactory.getNewNick(), userController.updateNickName(userFactory.getNewNick()))),
                 () -> Assertions.assertDoesNotThrow(() ->
-                        Assertions.assertNotEquals(userFactory.findUser(userFactory.getId()).getNickName(), userFactory.getNickName()))
+                        Assertions.assertNotEquals(userFactory.findUser(userFactory.getId1()).getNickName(), userFactory.getNickName1()))
         );
     }
 }

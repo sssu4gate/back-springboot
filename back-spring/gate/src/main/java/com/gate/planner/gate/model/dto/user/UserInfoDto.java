@@ -15,7 +15,6 @@ import java.util.List;
 
 @ApiModel
 @Getter
-@NoArgsConstructor
 public class UserInfoDto {
     @ApiModelProperty("유저 정보")
     ProfileApiDto userInfo;

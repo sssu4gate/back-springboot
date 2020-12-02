@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 @ApiModel
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class CourseMemoResponseDto {
     @ApiModelProperty("메모 식별자")
     Long id;

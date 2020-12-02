@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gate.planner.gate.model.entity.place.Place;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @ApiModel
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PlaceDto {
@@ -37,13 +39,4 @@ public class PlaceDto {
         this.place_name = place.getName();
     }
 
-    @Builder
-    public PlaceDto(Long id, String address_name, String place_name, String category_name, String x, String y) {
-        this.id = id;
-        this.address_name = address_name;
-        this.category_name = category_name;
-        this.place_name = place_name;
-        this.x = x;
-        this.y = y;
-    }
 }

@@ -12,7 +12,6 @@ import java.util.List;
 
 @ApiModel
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class CourseRequestDto {
     @ApiModelProperty("코스 이름")

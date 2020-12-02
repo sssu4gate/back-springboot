@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @ApiModel
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class LoginRequestDto {
     @ApiModelProperty("카카오 AccessToken")
     String accessToken;

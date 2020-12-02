@@ -13,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course {
@@ -21,44 +20,54 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Setter
     @Column(nullable = false)
     String title;
 
     @Lob
+    @Setter
     String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     User user;
 
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<PlaceWrapper> places = new ArrayList<>();
 
+    @Setter
     @Enumerated(EnumType.STRING)
     ShareType shareType;
 
+    @Setter
     Date dateDay;
 
     Date createdAt = DateUtil.toAsiaTimeZone();
 
-    @OneToMany(mappedBy = "course",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<CourseMemo> memos;
 
+    @Setter
     int commentNum = 0;
 
+    @Setter
     int likeNum = 0;
 
+    @Setter
     int totalCost = 0;
 
     /**
      * 행알이의 추가 코드
      */
+    @Setter
     int reportNum = 0;
 
     /**
      * 행알이가 추가한 코드
      * 신고 횟수 5번 이상 인지 체크
      */
+    @Setter
     boolean reportFlag = false;
 
     @Builder

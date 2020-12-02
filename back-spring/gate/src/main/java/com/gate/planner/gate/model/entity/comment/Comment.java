@@ -10,13 +10,13 @@ import java.util.Date;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Setter
     String content;
 
     Date createdAt = DateUtil.toAsiaTimeZone();

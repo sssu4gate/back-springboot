@@ -5,6 +5,7 @@ import com.gate.planner.gate.controller.SearchController;
 import com.gate.planner.gate.dao.course.CourseRepository;
 import com.gate.planner.gate.exception.course.AlreadyReportedException;
 import com.gate.planner.gate.exception.course.CourseRequestTypeInvalidException;
+import com.gate.planner.gate.exception.course.CourseUpdateDenyException;
 import com.gate.planner.gate.factory.CommonFactory;
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
 import com.gate.planner.gate.model.entity.course.Course;
@@ -43,9 +44,10 @@ public class CourseTest extends CommonFactory {
 
     @BeforeEach
     public void setUser() {
-        Assertions.assertDoesNotThrow(() -> userFactory.returnSignUpUser());
+        Assertions.assertDoesNotThrow(() -> userFactory.returnSignUpUser1());
+        Assertions.assertDoesNotThrow(() -> userFactory.returnSignUpUser2());
         Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnFirstPlaceDtoList()));
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userFactory.getId(), ""));
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userFactory.getId1(), ""));
     }
 
 
@@ -60,7 +62,7 @@ public class CourseTest extends CommonFactory {
                 () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(courseRequestDto)),
                 () -> Assertions.assertDoesNotThrow(() -> {
                     Assertions.assertNotEquals(0,
-                            searchController.getCourseSearchList(userFactory.getNickName(), CourseSearchType.WRITE, 1, 5).size()
+                            searchController.getCourseSearchList(userFactory.getNickName1(), CourseSearchType.WRITE, 1, 5).size()
                     );
                     Assertions.assertEquals(0, searchController.getCourseSearchList("0", CourseSearchType.MONEY, 1, 5).size());
                 })
@@ -69,11 +71,20 @@ public class CourseTest extends CommonFactory {
 
     @Test
     public void updateCourseTest() {
+
         CourseRequestDto courseUpdateDto = courseFactory.returnUpdateCourseRequestDto();
-        Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnSecondPlaceDtoList()));
-        Assertions.assertDoesNotThrow(
-                () -> courseController.updateCourse(courseFactory.returnSaveCourse().getId(), courseUpdateDto));
-        Assertions.assertEquals(courseUpdateDto.getCourseName(), courseFactory.findCourseAtDB().get(0).getTitle());
+        Assertions.assertAll(
+                () -> Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnSecondPlaceDtoList())),
+                () -> {
+                    Course course = courseFactory.returnSaveCourse();
+                    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userFactory.getId2(), ""));
+                    Assertions.assertThrows(CourseUpdateDenyException.class,
+                            () -> courseController.updateCourse(courseFactory.returnSaveCourse().getId(), courseUpdateDto), "수정 권한이없습니다.");
+                    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userFactory.getId1(), ""));
+                    Assertions.assertDoesNotThrow(() -> courseController.updateCourse(course.getId(), courseUpdateDto));
+                },
+                () -> Assertions.assertEquals(courseUpdateDto.getCourseName(), courseFactory.findCourseAtDB().get(0).getTitle()));
+
     }
 
     @Test
@@ -130,7 +141,7 @@ public class CourseTest extends CommonFactory {
                 () -> {
                     Course course = courseFactory.returnSaveCourse();
                     Assertions.assertDoesNotThrow(() ->
-                            Assertions.assertEquals(1, courseService.searchCourse(userFactory.getNickName(), CourseSearchType.WRITE, 1, 5).size())
+                            Assertions.assertEquals(1, courseService.searchCourse(userFactory.getNickName1(), CourseSearchType.WRITE, 1, 5).size())
                     );
                     Assertions.assertDoesNotThrow(() -> {
                         Assertions.assertNotEquals(1, courseService.searchCourse("0", CourseSearchType.MONEY, 1, 5));

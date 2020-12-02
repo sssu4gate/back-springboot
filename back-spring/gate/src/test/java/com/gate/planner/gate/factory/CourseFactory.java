@@ -50,7 +50,7 @@ public class CourseFactory {
 
     public Course returnSaveCourse() throws ParseException {
         return courseRepository.save(Course.builder()
-                .user(userFactory.returnSignUpUser())
+                .user(userFactory.returnSignUpUser1())
                 .content(content)
                 .title(title)
                 .dateDay(dateDay)

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @ApiModel
 @Getter
-@NoArgsConstructor
 public class PlaceWrapperResponseDto {
 
     @ApiModelProperty("장소Wrapper의 식별자")

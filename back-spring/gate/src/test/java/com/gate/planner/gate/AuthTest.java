@@ -33,7 +33,7 @@ public class AuthTest extends CommonFactory {
      */
     @Test
     public void signUpTest() throws ParseException {
-        Assertions.assertDoesNotThrow(() -> authController.signUp(userFactory.returnSignUpRequestDto()));
+        Assertions.assertDoesNotThrow(() -> authController.signUp(userFactory.returnSignUpRequestDto1()));
     }
 
     /**
@@ -41,12 +41,11 @@ public class AuthTest extends CommonFactory {
      */
     @Test
     public void generateTokenTest() {
-
         Assertions.assertDoesNotThrow(() ->
                 {
-                    userFactory.returnSignUpUser();
+                    userFactory.returnSignUpUser1();
                     jwtProvider.validateToken(
-                            authService.generateToken(userFactory.getId()).getAccessToken());
+                            authService.generateToken(userFactory.getId1()).getAccessToken());
                 }
         );
     }
@@ -59,6 +58,15 @@ public class AuthTest extends CommonFactory {
     public void loginTest() throws JsonProcessingException {
         LoginRequestDto loginRequestDto = new LoginRequestDto(null, null);
         Assertions.assertThrows(Exception.class, () -> authController.login(loginRequestDto), "올바르지 않은 토큰입니다(카카오)");
+    }
+
+    @Test
+    public void checkNicknameTest()
+    {
+        Assertions.assertAll(
+                () -> Assertions.assertDoesNotThrow(() -> authController.signUp(userFactory.returnSignUpRequestDto1())),
+                () -> Assertions.assertEquals(false,authController.checkNickNameExist(userFactory.getNickName1()))
+        );
     }
 
 

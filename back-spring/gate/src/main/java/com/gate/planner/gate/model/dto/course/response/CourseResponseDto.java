@@ -9,8 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @ApiModel
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +18,16 @@ public class CourseResponseDto {
     Long id;
     @ApiModelProperty("코스 이름")
     String title;
+
+    @ApiModelProperty("유저 닉네임")
+    String nickName;
+
+    @ApiModelProperty("코스 본문")
+    String content;
+
+    @ApiModelProperty("유저 이미지")
+    String imgUrl;
+
     @ApiModelProperty("좋아요 수")
     int likeNum;
     @ApiModelProperty("댓글 수")
@@ -34,6 +42,9 @@ public class CourseResponseDto {
     public CourseResponseDto(Course course) {
         this.id = course.getId();
         this.shareType = course.getShareType();
+        this.nickName = course.getUser().getNickName();
+        this.content = course.getContent();
+        this.imgUrl = course.getUser().getImageUrl();
         this.title = course.getTitle();
         this.createdAt = DateUtil.parseString(course.getCreatedAt());
         this.likeNum = course.getLikeNum();

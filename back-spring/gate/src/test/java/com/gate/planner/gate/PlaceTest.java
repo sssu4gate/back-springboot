@@ -34,7 +34,7 @@ public class PlaceTest extends CommonFactory {
 
     @BeforeEach
     public void setUser() throws ParseException {
-        User user = userFactory.returnSignUpUser();
+        User user = userFactory.returnSignUpUser1();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user.getId(), ""));
     }
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gate.planner.gate.dao.user.UserRepository;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.api.ProfileApiDto;
-import com.gate.planner.gate.model.dto.api.TokenRefreshDto;
 import com.gate.planner.gate.model.dto.auth.LogInResponseDto;
 import com.gate.planner.gate.model.dto.auth.LoginRequestDto;
 import com.gate.planner.gate.model.dto.auth.SignUpRequestDto;
@@ -16,32 +15,30 @@ import com.gate.planner.gate.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-        private final ApiService apiService;
-        private final UserRepository userRepository;
-        private final JwtProvider jwtProvider;
+    private final ApiService apiService;
+    private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
 
-        public void signUp(SignUpRequestDto signUpRequestDto) throws ParseException {
-            User user = User.builder().id(signUpRequestDto.getId())
-                    .accessToken(signUpRequestDto.getAccessToken())
-                    .refreshToken(signUpRequestDto.getRefreshToken())
-                    .nickName(signUpRequestDto.getNickName())
-                    .birth(DateUtil.parseDateFormat(signUpRequestDto.getBirth()))
-                    .gender(signUpRequestDto.getGender())
-                    .roles(Collections.singletonList(UserRole.ROLE_USER.toString()))
-                    .build();
+    public void signUp(SignUpRequestDto signUpRequestDto) throws ParseException {
+        User user = User.builder().id(signUpRequestDto.getId())
+                .accessToken(signUpRequestDto.getAccessToken())
+                .refreshToken(signUpRequestDto.getRefreshToken())
+                .nickName(signUpRequestDto.getNickName())
+                .birth(DateUtil.parseDateFormat(signUpRequestDto.getBirth()))
+                .gender(signUpRequestDto.getGender())
+                .roles(Collections.singletonList(UserRole.ROLE_USER.toString()))
+                .build();
 
-            userRepository.save(user);
-        }
+        userRepository.save(user);
+    }
 
-        public boolean checkNickNameExist(String nickName) {
+    public boolean checkNickNameExist(String nickName) {
         return !userRepository.existsByNickName(nickName);
     }
 
@@ -64,6 +61,7 @@ public class AuthService {
         try {
             ProfileApiDto profile = apiService.callUserInfoAPI(loginRequestDto.getAccessToken(), loginRequestDto.getRefreshToken());
             user = userRepository.findById(profile.getId()).orElseThrow(UserNotExistException::new);
+            user.setImageUrl(profile.getProperties().getProfile_image());
             return generateToken(user.getId());
         } catch (UserNotExistException ue) {
             throw ue;

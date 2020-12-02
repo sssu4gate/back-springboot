@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 @ApiModel
 @Getter
-@NoArgsConstructor
 public class LogInResponseDto {
     @ApiModelProperty("어플리케이션 AccessToken")
     String accessToken;
