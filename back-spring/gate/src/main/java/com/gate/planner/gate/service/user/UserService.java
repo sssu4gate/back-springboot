@@ -3,6 +3,7 @@ package com.gate.planner.gate.service.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gate.planner.gate.dao.user.UserRepository;
 import com.gate.planner.gate.exception.user.UserNotExistException;
+import com.gate.planner.gate.model.dto.api.ProfileApiDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.user.UserInfoDto;
 import com.gate.planner.gate.model.entity.course.CourseSearchType;
@@ -33,7 +34,9 @@ public class UserService {
     @Transactional
     public UserInfoDto findProfile() throws JsonProcessingException {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
-        return new UserInfoDto(apiService.callUserInfoAPI(user.getAccessToken(), user.getRefreshToken()), user);
+        ProfileApiDto profileApiDto = apiService.callUserInfoAPI(user.getAccessToken(), user.getRefreshToken());
+        user.setImageUrl(profileApiDto.getProperties().getProfile_image());
+        return new UserInfoDto(profileApiDto, user);
     }
 
     /**
