@@ -1,14 +1,15 @@
 package com.gate.planner.gate;
 
-import com.gate.planner.gate.dao.common.CommonPage;
+import com.gate.planner.gate.controller.CourseController;
+import com.gate.planner.gate.controller.SearchController;
 import com.gate.planner.gate.dao.course.CourseRepository;
+import com.gate.planner.gate.exception.course.AlreadyReportedException;
 import com.gate.planner.gate.exception.course.CourseRequestTypeInvalidException;
 import com.gate.planner.gate.factory.CommonFactory;
 import com.gate.planner.gate.model.dto.course.request.CourseRequestDto;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.course.CourseRequestType;
 import com.gate.planner.gate.model.entity.course.CourseSearchType;
-import com.gate.planner.gate.model.entity.course.ShareType;
 import com.gate.planner.gate.model.entity.course.report.CourseReportType;
 import com.gate.planner.gate.service.course.CourseService;
 import com.gate.planner.gate.service.place.PlaceService;
@@ -24,6 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 public class CourseTest extends CommonFactory {
+
+    @Autowired
+    SearchController searchController;
+
+    @Autowired
+    CourseController courseController;
 
     @Autowired
     CourseService courseService;
@@ -50,11 +57,12 @@ public class CourseTest extends CommonFactory {
     public void saveCourseTest() {
         CourseRequestDto courseRequestDto = courseFactory.returnCourseRequestDto();
         Assertions.assertAll(
-                () -> Assertions.assertDoesNotThrow(() -> courseService.saveCourse(courseRequestDto)),
+                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(courseRequestDto)),
                 () -> Assertions.assertDoesNotThrow(() -> {
                     Assertions.assertNotEquals(0,
-                            courseRepository.findAllByUser_NickNameAndShareTypeAndReportFlagIsFalse(userFactory.getNickName(), new CommonPage(1, 5), ShareType.PUBLIC).size()
+                            searchController.getCourseSearchList(userFactory.getNickName(), CourseSearchType.WRITE, 1, 5).size()
                     );
+                    Assertions.assertEquals(0, searchController.getCourseSearchList("0", CourseSearchType.MONEY, 1, 5).size());
                 })
         );
     }
@@ -64,7 +72,7 @@ public class CourseTest extends CommonFactory {
         CourseRequestDto courseUpdateDto = courseFactory.returnUpdateCourseRequestDto();
         Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnSecondPlaceDtoList()));
         Assertions.assertDoesNotThrow(
-                () -> courseService.updateCourse(courseFactory.returnSaveCourse().getId(), courseUpdateDto));
+                () -> courseController.updateCourse(courseFactory.returnSaveCourse().getId(), courseUpdateDto));
         Assertions.assertEquals(courseUpdateDto.getCourseName(), courseFactory.findCourseAtDB().get(0).getTitle());
     }
 
@@ -74,7 +82,7 @@ public class CourseTest extends CommonFactory {
                 () -> Assertions.assertDoesNotThrow(() -> courseFactory.returnSaveCourse()),
                 () -> {
                     Course course = courseFactory.findCourseAtDB().get(0);
-                    Assertions.assertDoesNotThrow(() -> courseService.likeCourse(course.getId()));
+                    Assertions.assertDoesNotThrow(() -> courseController.likeCourse(course.getId()));
                     Assertions.assertEquals(1, course.getLikeNum());
                 }
         );
@@ -84,10 +92,11 @@ public class CourseTest extends CommonFactory {
     public void returnBasicCourseListTest() {
         Assertions.assertAll(
                 () -> Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnSecondPlaceDtoList())),
-                () -> Assertions.assertDoesNotThrow(() -> courseService.saveCourse(courseFactory.returnUpdateCourseRequestDto())),
-                () -> Assertions.assertDoesNotThrow(() -> courseService.saveCourse(courseFactory.returnCourseRequestDto())),
+                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(courseFactory.returnUpdateCourseRequestDto())),
+                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(courseFactory.returnCourseRequestDto())),
                 () -> Assertions.assertThrows(CourseRequestTypeInvalidException.class, () -> courseService.basicCourseList(null, 1, 5)),
-                () -> Assertions.assertNotEquals(2, courseService.basicCourseList(CourseRequestType.LATEST, 1, 5).size())
+                () -> Assertions.assertNotEquals(2, courseController.responseBasicCourseList(CourseRequestType.LATEST, 1, 5).size()),
+                () -> Assertions.assertNotEquals(2, courseController.responseBasicCourseList(CourseRequestType.LIKE, 1, 5).size())
         );
     }
 
@@ -96,7 +105,8 @@ public class CourseTest extends CommonFactory {
         Assertions.assertAll(
                 () -> {
                     Course course = courseFactory.returnSaveCourse();
-                    Assertions.assertDoesNotThrow(() -> courseService.reportCourse(course.getId(), CourseReportType.OVERLAP));
+                    Assertions.assertDoesNotThrow(() -> courseController.reportCourse(course.getId(), CourseReportType.OVERLAP));
+                    Assertions.assertThrows(AlreadyReportedException.class, () -> courseController.reportCourse(course.getId(), CourseReportType.ADVERTISE), "이미 신고한 게시글입니다.");
                     Assertions.assertEquals(1, course.getReportNum());
                 }
         );

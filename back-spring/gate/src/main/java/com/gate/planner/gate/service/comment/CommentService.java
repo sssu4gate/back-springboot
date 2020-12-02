@@ -3,6 +3,8 @@ package com.gate.planner.gate.service.comment;
 import com.gate.planner.gate.dao.coment.CommentRepository;
 import com.gate.planner.gate.dao.course.CourseRepository;
 import com.gate.planner.gate.dao.user.UserRepository;
+import com.gate.planner.gate.exception.course.CommentAccessDenyException;
+import com.gate.planner.gate.exception.course.CommentNotExistsException;
 import com.gate.planner.gate.exception.course.CourseNotExistException;
 import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.comment.response.CommentResponseDto;
@@ -53,18 +55,25 @@ public class CommentService {
     /**
      * 댓글 삭제
      */
-    public Long deleteComment(Long id) {
-        commentRepository.deleteById(id);
+    public void deleteComment(Long id) {
+        Comment comment = commentRepository.findById(id).orElseThrow(CommentNotExistsException::new);
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
+        if (comment.getUser().equals(user))
+            commentRepository.deleteById(id);
+        else
+            throw new CommentAccessDenyException();
 
-        return id;
     }
 
     /**
      * 댓글 수정
      */
-    public Long modifyComment(Long id, String content) {
-        commentRepository.findById(id).get().setContent(content);
-
-        return id;
+    public void modifyComment(Long id, String content) {
+        Comment comment = commentRepository.findById(id).orElseThrow(CommentNotExistsException::new);
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
+        if (comment.getUser().equals(user))
+            comment.setContent(content);
+        else
+            throw new CommentAccessDenyException();
     }
 }

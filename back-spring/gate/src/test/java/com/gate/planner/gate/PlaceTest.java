@@ -55,7 +55,7 @@ public class PlaceTest extends CommonFactory {
     public void savePlaceWrapperTest() {
         PlaceWrapperRequestDto placeWrapperRequestDto = placeFactory.returnPlaceWrapperDto();
         Assertions.assertAll(
-                () -> Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnFirstPlaceDtoList())),
+                () -> Assertions.assertDoesNotThrow(() -> placeController.decidePlaces(placeFactory.returnFirstPlaceDtoList())),
                 () -> Assertions.assertDoesNotThrow(() -> placeService.savePlaceWrapper(placeWrapperRequestDto, courseFactory.returnSaveCourse())),
                 () -> Assertions.assertNotEquals(0, placeWrapperRepository.findAll().size())
         );
@@ -63,7 +63,7 @@ public class PlaceTest extends CommonFactory {
 
     @Test
     public void placeDetailTest() {
-        Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnFirstPlaceDtoList()));
+        Assertions.assertDoesNotThrow(() -> placeController.decidePlaces(placeFactory.returnFirstPlaceDtoList()));
         Assertions.assertDoesNotThrow(() -> placeController.returnPlace(placeFactory.getFirst_id()));
     }
 }

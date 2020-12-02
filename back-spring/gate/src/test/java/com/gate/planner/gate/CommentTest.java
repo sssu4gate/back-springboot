@@ -48,6 +48,7 @@ public class CommentTest extends CommonFactory {
                     Long commentId = commentService.saveComment(course.getId(), commentFactory.getContent());
                     Assertions.assertEquals(1, commentFactory.findCommentAtDB().size());
                     Assertions.assertDoesNotThrow(() -> courseController.deleteComment(course.getId(), commentId));
+                    Assertions.assertThrows(Commen,() -> courseController.deleteComment(course.getId(), commentId));
                     Assertions.assertNotEquals(1, commentFactory.findCommentAtDB().size());
                 }
         );

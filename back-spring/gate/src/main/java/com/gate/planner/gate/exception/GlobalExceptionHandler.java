@@ -3,10 +3,7 @@ package com.gate.planner.gate.exception;
 import com.gate.planner.gate.exception.auth.EmailAlreadyExistException;
 import com.gate.planner.gate.exception.auth.NickNameAlreadyExistException;
 import com.gate.planner.gate.exception.auth.UserNameAlreadyExistException;
-import com.gate.planner.gate.exception.course.CourseNotExistException;
-import com.gate.planner.gate.exception.course.CourseRequestTypeInvalidException;
-import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
-import com.gate.planner.gate.exception.course.CourseUpdateDenyException;
+import com.gate.planner.gate.exception.course.*;
 import com.gate.planner.gate.exception.place.PlaceNotExistException;
 import com.gate.planner.gate.exception.place.PlaceWrapperNotExistException;
 import com.gate.planner.gate.exception.post.InvalidFileTypeException;
@@ -67,6 +64,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = CourseUpdateDenyException.class)
     public ExceptionResponse CourseUpdateDenyExceptionHandler(CourseUpdateDenyException e) {
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = CommentNotExistsException.class)
+    public ExceptionResponse CommentNotExistExceptionHandler(CommentNotExistsException e) {
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = CommentAccessDenyException.class)
+    public ExceptionResponse CommentUpdateDenyExceptionHandler(CommentAccessDenyException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 }

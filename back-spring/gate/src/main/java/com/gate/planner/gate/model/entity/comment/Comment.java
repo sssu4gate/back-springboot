@@ -7,7 +7,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
@@ -27,12 +26,6 @@ public class Comment {
 
     @ManyToOne
     Course course;
-
-    @ManyToOne
-    Comment parentComment;
-
-    @OneToMany(mappedBy = "parentComment")
-    List<Comment> childComment;
 
     @Builder
     public Comment(String content, User user, Course course) {
