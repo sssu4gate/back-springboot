@@ -41,6 +41,9 @@ public class Course {
     ShareType shareType;
 
     @Setter
+    String imgUrl;
+
+    @Setter
     Date dateDay;
 
     Date createdAt = DateUtil.toAsiaTimeZone();
@@ -71,9 +74,10 @@ public class Course {
     boolean reportFlag = false;
 
     @Builder
-    public Course(String title, String content, User user, Date dateDay, ShareType shareType) {
+    public Course(String title, String content, String imgUrl, User user, Date dateDay, ShareType shareType) {
         this.title = title;
         this.content = content;
+        this.imgUrl = imgUrl;
         this.dateDay = dateDay;
         this.user = user;
         this.shareType = shareType;

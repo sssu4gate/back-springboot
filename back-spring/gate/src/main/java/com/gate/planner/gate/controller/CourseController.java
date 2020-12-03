@@ -10,8 +10,11 @@ import com.gate.planner.gate.service.comment.CommentService;
 import com.gate.planner.gate.service.course.CourseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -23,9 +26,9 @@ public class CourseController {
     private final CourseService courseService;
 
     @ApiOperation("코스 저장")
-    @PostMapping("/save")
-    public CourseResponseDetailDto saveCourse(@RequestBody CourseRequestDto courseRequestDto) throws ParseException {
-        return courseService.saveCourse(courseRequestDto);
+    @PostMapping(value = "/save", consumes = (MediaType.ALL_VALUE))
+    public CourseResponseDetailDto saveCourse(@RequestPart MultipartFile img, @RequestPart CourseRequestDto courseRequestDto) throws ParseException, IOException {
+        return courseService.saveCourse(img, courseRequestDto);
     }
 
     @ApiOperation("코스 좋아요 기능")

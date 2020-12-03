@@ -26,7 +26,7 @@ public class CourseResponseDto {
     String content;
 
     @ApiModelProperty("유저 이미지")
-    String imgUrl;
+    String userImgUrl;
 
     @ApiModelProperty("좋아요 수")
     int likeNum;
@@ -44,7 +44,7 @@ public class CourseResponseDto {
         this.shareType = course.getShareType();
         this.nickName = course.getUser().getNickName();
         this.content = course.getContent();
-        this.imgUrl = course.getUser().getImageUrl();
+        this.userImgUrl = course.getUser().getImgUrl();
         this.title = course.getTitle();
         this.createdAt = DateUtil.parseString(course.getCreatedAt());
         this.likeNum = course.getLikeNum();

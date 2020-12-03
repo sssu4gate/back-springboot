@@ -30,6 +30,12 @@ public class CourseResponseDetailDto {
     @ApiModelProperty("코스 본문")
     String content;
 
+    @ApiModelProperty
+    String userImgUrl;
+
+    @ApiModelProperty("코스 대표 이미지")
+    String courseImgUrl;
+
     @ApiModelProperty("코스 작성자 닉네임")
     String nickName;
 
@@ -59,10 +65,12 @@ public class CourseResponseDetailDto {
     ShareType shareType;
 
     @Builder
-    public CourseResponseDetailDto(Long id, int likeNum, int commentNum, String nickName, Date createdAt, Date dateDay, ShareType type, String title, String content, int totalCost, List<PlaceWrapperResponseDto> places, List<CourseMemoResponseDto> memos) {
+    public CourseResponseDetailDto(Long id, String courseImgUrl, String userImgUrl, int likeNum, int commentNum, String nickName, Date createdAt, Date dateDay, ShareType type, String title, String content, int totalCost, List<PlaceWrapperResponseDto> places, List<CourseMemoResponseDto> memos) {
         this.id = id;
         this.likeNum = likeNum;
         this.commentNum = commentNum;
+        this.courseImgUrl = courseImgUrl;
+        this.userImgUrl = userImgUrl;
         this.nickName = nickName;
         this.createdAt = DateUtil.parseString(createdAt);
         this.dateDay = DateUtil.parseString(dateDay);
@@ -77,6 +85,8 @@ public class CourseResponseDetailDto {
     public CourseResponseDetailDto(Course course, User user) {
         this.id = course.getId();
         this.likeNum = course.getLikeNum();
+        this.userImgUrl = user.getImgUrl();
+        this.courseImgUrl = course.getImgUrl();
         this.commentNum = course.getCommentNum();
         this.nickName = user.getNickName();
         this.createdAt = DateUtil.parseString(course.getCreatedAt());

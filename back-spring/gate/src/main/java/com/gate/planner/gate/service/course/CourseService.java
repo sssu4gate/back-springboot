@@ -28,13 +28,16 @@ import com.gate.planner.gate.model.entity.course.report.CourseReport;
 import com.gate.planner.gate.model.entity.course.report.CourseReportType;
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import com.gate.planner.gate.model.entity.user.User;
+import com.gate.planner.gate.service.course.function.ImgUploadFunction;
 import com.gate.planner.gate.service.place.PlaceService;
 import com.gate.planner.gate.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,23 +57,31 @@ public class CourseService {
      * 행알이가 추가한 코드>3<
      */
     private final CourseReportRepository courseReportRepository;
+    private final ImgUploadFunction imgUploadFunction;
 
 
     /**
      * 코스 저장
      */
     @Transactional
-    public CourseResponseDetailDto saveCourse(CourseRequestDto courseRequestDto) throws ParseException {
+    public CourseResponseDetailDto saveCourse(MultipartFile image, CourseRequestDto courseRequestDto) throws ParseException, IOException {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         List<PlaceWrapperResponseDto> places = new ArrayList<>();
         List<CourseMemoResponseDto> memos = null;
+        String courseImgUrl = null;
         int totalCost = 0;
+
+        if (image != null)
+            courseImgUrl = imgUploadFunction.StoreImgToS3(image);
+
+
         Course course = courseRepository.save(
                 Course.builder()
                         .title(courseRequestDto.getCourseName())
                         .content(courseRequestDto.getContent())
                         .shareType(courseRequestDto.getShareType())
                         .dateDay(DateUtil.parseDateFormat(courseRequestDto.getDateDay()))
+                        .imgUrl(courseImgUrl)
                         .user(user).build());
 
         if (courseRequestDto.getPlaces() != null) {
@@ -97,6 +108,8 @@ public class CourseService {
 
         return CourseResponseDetailDto.builder()
                 .id(course.getId())
+                .courseImgUrl(courseImgUrl)
+                .userImgUrl(user.getImgUrl())
                 .likeNum(course.getLikeNum())
                 .commentNum(course.getCommentNum())
                 .content(course.getContent())

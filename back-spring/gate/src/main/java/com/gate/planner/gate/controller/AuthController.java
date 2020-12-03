@@ -43,8 +43,8 @@ public class AuthController {
 
     @ApiOperation("회원가입")
     @PostMapping("/signup")
-    public void signUp(@RequestBody SignUpRequestDto signUpRequestDto) throws ParseException {
-        authService.signUp(signUpRequestDto);
+    public LogInResponseDto signUp(@RequestBody SignUpRequestDto signUpRequestDto) throws ParseException {
+        return authService.signUp(signUpRequestDto);
     }
 
     @ApiOperation("회원가입 시 닉네임 중복 확인")

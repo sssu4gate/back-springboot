@@ -69,4 +69,11 @@ public class GlobalExceptionHandler {
     public ExceptionResponse CommentUpdateDenyExceptionHandler(CommentAccessDenyException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
+
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = InvalidFileTypeException.class)
+    public ExceptionResponse InvalidFileTypeExceptionHandler(InvalidFileTypeException e) {
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e);
+    }
 }

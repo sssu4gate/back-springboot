@@ -26,7 +26,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
-    public void signUp(SignUpRequestDto signUpRequestDto) throws ParseException {
+    public LogInResponseDto signUp(SignUpRequestDto signUpRequestDto) throws ParseException {
         User user = User.builder().id(signUpRequestDto.getId())
                 .accessToken(signUpRequestDto.getAccessToken())
                 .refreshToken(signUpRequestDto.getRefreshToken())
@@ -37,6 +37,8 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+
+        return generateToken(signUpRequestDto.getId());
     }
 
     public boolean checkNickNameExist(String nickName) {
@@ -63,7 +65,7 @@ public class AuthService {
         try {
             ProfileApiDto profile = apiService.callUserInfoAPI(loginRequestDto.getAccessToken(), loginRequestDto.getRefreshToken());
             user = userRepository.findById(profile.getId()).orElseThrow(UserNotExistException::new);
-            user.setImageUrl(profile.getProperties().getProfile_image());
+            user.setImgUrl(profile.getProperties().getProfile_image());
             return generateToken(user.getId());
         } catch (UserNotExistException ue) {
             throw ue;

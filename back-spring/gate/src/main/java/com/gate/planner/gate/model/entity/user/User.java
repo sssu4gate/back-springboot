@@ -33,7 +33,7 @@ public class User implements UserDetails {
     String refreshToken;
 
     @Setter
-    String imageUrl;
+    String imgUrl;
 
     Date birth;
 
@@ -53,7 +53,7 @@ public class User implements UserDetails {
         this.id = id;
         this.birth = birth;
         this.gender = gender;
-        this.imageUrl = imgUrl;
+        this.imgUrl = imgUrl;
         this.refreshToken = refreshToken;
         this.accessToken = accessToken;
         this.nickName = nickName;
