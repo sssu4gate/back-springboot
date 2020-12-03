@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum CourseSearchType {
-    WRITE, LIKE, MONEY, TAG, PLACE, TEXT
+    WRITE, LIKE, MONEY, TAG, PLACE, TEXT, DATE
 }

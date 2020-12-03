@@ -27,7 +27,7 @@ public class CourseController {
 
     @ApiOperation("코스 저장")
     @PostMapping(value = "/save", consumes = (MediaType.ALL_VALUE))
-    public CourseResponseDetailDto saveCourse(@RequestPart MultipartFile img, @RequestPart CourseRequestDto courseRequestDto) throws ParseException, IOException {
+    public CourseResponseDetailDto saveCourse(@RequestPart(required = false) MultipartFile img, @RequestPart CourseRequestDto courseRequestDto) throws ParseException, IOException {
         return courseService.saveCourse(img, courseRequestDto);
     }
 
@@ -62,9 +62,9 @@ public class CourseController {
     }
 
     @ApiOperation("코스 수정")
-    @PutMapping("/{id}")
-    public CourseResponseDetailDto updateCourse(@PathVariable Long id, @RequestBody CourseRequestDto courseRequestDto) throws ParseException {
-        return courseService.updateCourse(id, courseRequestDto);
+    @PutMapping(value = "/{id}", consumes = (MediaType.ALL_VALUE))
+    public CourseResponseDetailDto updateCourse(@PathVariable Long id, @RequestPart(required = false) MultipartFile img, @RequestPart CourseRequestDto courseRequestDto) throws ParseException, IOException {
+        return courseService.updateCourse(id, img, courseRequestDto);
     }
 
     private final CommentService commentService;

@@ -1,21 +1,18 @@
 package com.gate.planner.gate.service.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gate.planner.gate.dao.user.UserRepository;
 import com.gate.planner.gate.exception.user.UserNotExistException;
-import com.gate.planner.gate.model.dto.api.ProfileApiDto;
-import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.user.UserInfoDto;
-import com.gate.planner.gate.model.entity.course.CourseSearchType;
 import com.gate.planner.gate.model.entity.user.User;
-import com.gate.planner.gate.service.api.ApiService;
 import com.gate.planner.gate.service.course.CourseService;
+import com.gate.planner.gate.service.course.function.ImgUploadFunction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
 
 @Service
 @Transactional
@@ -24,27 +21,31 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CourseService courseService;
-    private final ApiService apiService;
+    private final ImgUploadFunction imgUploadFunction;
+
 
     @Transactional
-    public List<CourseResponseDto> findUserRelatedPost(int page, CourseSearchType type, int offset) {
-        return courseService.findUserRelatedCourse(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()), type, page, offset);
-    }
-
-    @Transactional
-    public UserInfoDto findProfile() throws JsonProcessingException {
+    public UserInfoDto findProfile() {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
-        ProfileApiDto profileApiDto = apiService.callUserInfoAPI(user.getAccessToken(), user.getRefreshToken());
-        user.setImageUrl(profileApiDto.getProperties().getProfile_image());
-        return new UserInfoDto(profileApiDto, user);
+        return new UserInfoDto(user);
     }
 
     /**
      * 우선은 닉네임만 변경
      */
+    @Transactional
     public String updateNickName(String newNick) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         user.setNickName(newNick);
         return newNick;
+    }
+
+    @Transactional
+    public UserInfoDto updateUserProfileImg(MultipartFile image) throws IOException {
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
+        String imgUrl = imgUploadFunction.StoreImgToS3(image);
+
+        user.setImgUrl(imgUrl);
+        return new UserInfoDto(user);
     }
 }

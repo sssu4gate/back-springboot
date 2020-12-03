@@ -40,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,10 +125,15 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseResponseDetailDto updateCourse(Long id, CourseRequestDto courseRequestDto) throws ParseException {
+    public CourseResponseDetailDto updateCourse(Long id, MultipartFile image, CourseRequestDto courseRequestDto) throws ParseException, IOException {
         int totalCost = 0;
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         Course updateCourse = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
+
+        if (image != null) {
+            updateCourse.setImgUrl(imgUploadFunction.StoreImgToS3(image));
+            ;
+        }
 
         updateCourse.setTitle(courseRequestDto.getCourseName());
         updateCourse.setContent(courseRequestDto.getContent());
@@ -215,8 +221,8 @@ public class CourseService {
      * 나와 연관된 코스정보
      */
     @Transactional
-    public List<CourseResponseDto> findUserRelatedCourse(Long id, CourseSearchType type, int page, int offset) {
-        User user = userRepository.findById(id).orElseThrow(UserNotExistException::new);
+    public List<CourseResponseDto> findUserRelatedCourse(CourseSearchType type, int page, int offset, String startDate, String endDate) throws ParseException {
+        User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         List<CourseResponseDto> returnCourseList = new ArrayList<>();
         if (type.equals(CourseSearchType.LIKE)) {
             List<CourseOnly> courseList = courseLikeRepository.findAllByUser(user, new CommonPage(page, offset));
@@ -227,6 +233,11 @@ public class CourseService {
             List<Course> courseList = courseRepository.findAllByUser(user, new CommonPage(page, offset));
             for (Course course : courseList)
                 returnCourseList.add(new CourseResponseDto(course));
+        } else if (type.equals(CourseSearchType.DATE) && startDate != null && endDate != null) {
+            Date sDate = DateUtil.parseDateFormat(startDate);
+            Date eDate = DateUtil.parseDateFormat(endDate);
+
+            return courseRepository.findAllByDateDayBetweenAndUser(sDate, eDate, user).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else
             throw new CourseSearchTypeWrongException();
         return returnCourseList;

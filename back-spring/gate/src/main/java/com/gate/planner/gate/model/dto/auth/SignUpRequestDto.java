@@ -6,8 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 
 @ApiModel
 @Getter
@@ -16,6 +14,8 @@ public class SignUpRequestDto {
 
     @ApiModelProperty("유저 식별자")
     Long id;
+    @ApiModelProperty("카카오 프로필 사진")
+    String kakaoImgUrl;
     @ApiModelProperty("닉네임")
     String nickName;
     @ApiModelProperty("성별")

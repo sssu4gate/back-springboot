@@ -29,6 +29,7 @@ public class AuthService {
     public LogInResponseDto signUp(SignUpRequestDto signUpRequestDto) throws ParseException {
         User user = User.builder().id(signUpRequestDto.getId())
                 .accessToken(signUpRequestDto.getAccessToken())
+                .imgUrl(signUpRequestDto.getKakaoImgUrl())
                 .refreshToken(signUpRequestDto.getRefreshToken())
                 .nickName(signUpRequestDto.getNickName())
                 .birth(DateUtil.parseDateFormat(signUpRequestDto.getBirth()))
@@ -60,12 +61,10 @@ public class AuthService {
 
     @Transactional
     public LogInResponseDto login(LoginRequestDto loginRequestDto) throws JsonProcessingException {
-
         User user = null;
         try {
             ProfileApiDto profile = apiService.callUserInfoAPI(loginRequestDto.getAccessToken(), loginRequestDto.getRefreshToken());
             user = userRepository.findById(profile.getId()).orElseThrow(UserNotExistException::new);
-            user.setImgUrl(profile.getProperties().getProfile_image());
             return generateToken(user.getId());
         } catch (UserNotExistException ue) {
             throw ue;
