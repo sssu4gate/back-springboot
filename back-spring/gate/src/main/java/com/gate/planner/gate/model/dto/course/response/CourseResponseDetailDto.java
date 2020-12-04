@@ -3,7 +3,6 @@ package com.gate.planner.gate.model.dto.course.response;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.course.ShareType;
-import com.gate.planner.gate.model.entity.user.User;
 import com.gate.planner.gate.util.DateUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -82,13 +81,13 @@ public class CourseResponseDetailDto {
         this.memos = memos;
     }
 
-    public CourseResponseDetailDto(Course course, User user) {
+    public CourseResponseDetailDto(Course course) {
         this.id = course.getId();
         this.likeNum = course.getLikeNum();
-        this.userImgUrl = user.getImgUrl();
+        this.userImgUrl = course.getUser().getImgUrl();
         this.courseImgUrl = course.getImgUrl();
         this.commentNum = course.getCommentNum();
-        this.nickName = user.getNickName();
+        this.nickName = course.getUser().getNickName();
         this.createdAt = DateUtil.parseString(course.getCreatedAt());
         this.dateDay = DateUtil.parseString(course.getDateDay());
         this.shareType = course.getShareType();

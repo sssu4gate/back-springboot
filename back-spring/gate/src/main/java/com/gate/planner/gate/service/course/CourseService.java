@@ -155,7 +155,7 @@ public class CourseService {
                             .content(memo.getContent()).build());
                 }
             }
-            return new CourseResponseDetailDto(updateCourse, user);
+            return new CourseResponseDetailDto(updateCourse);
         } else
             throw new CourseUpdateDenyException();
 
@@ -263,7 +263,7 @@ public class CourseService {
     public CourseResponseDetailDto courseDetail(long id) {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         Course course = courseRepository.findById(id).orElseThrow(CourseNotExistException::new);
-        return new CourseResponseDetailDto(course, user);
+        return new CourseResponseDetailDto(course);
     }
 
     /**
