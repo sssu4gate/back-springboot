@@ -3,6 +3,7 @@ package com.gate.planner.gate.controller;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
 import com.gate.planner.gate.model.entity.course.CourseSearchType;
+import com.gate.planner.gate.model.entity.place.PlaceCategory;
 import com.gate.planner.gate.service.api.ApiService;
 import com.gate.planner.gate.service.course.CourseService;
 import io.swagger.annotations.ApiOperation;
@@ -25,8 +26,8 @@ public class SearchController {
 
     @ApiOperation("키워드로 장소들 검색")
     @GetMapping("/place")
-    public ArrayList<PlaceDto> getPlaceSearchResult(@RequestParam String keyword, @RequestParam int page, @RequestParam int offset) throws IOException {
-        return apiService.callLocationAPI(page, keyword, offset);
+    public ArrayList<PlaceDto> getPlaceSearchResult(@RequestParam String keyword, @RequestParam(required = false) PlaceCategory category, @RequestParam int page, @RequestParam int offset) throws IOException {
+        return apiService.callLocationAPI(page, category, keyword, offset);
     }
 
     @ApiOperation("키워드로 코스 검색")

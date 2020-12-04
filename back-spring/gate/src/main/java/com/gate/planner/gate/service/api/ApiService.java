@@ -7,13 +7,13 @@ import com.gate.planner.gate.exception.user.UserNotExistException;
 import com.gate.planner.gate.model.dto.api.ProfileApiDto;
 import com.gate.planner.gate.model.dto.api.TokenRefreshDto;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
+import com.gate.planner.gate.model.entity.place.PlaceCategory;
 import com.gate.planner.gate.model.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -53,19 +53,24 @@ public class ApiService {
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
 
-    public ArrayList<PlaceDto> callLocationAPI(int page, String keyword, int offset) throws IOException {
+    public ArrayList<PlaceDto> callLocationAPI(int page, PlaceCategory category, String keyword, int offset) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "KakaoAK " + APIKEY);
         entity = new HttpEntity<String>(headers);
+        String url = null;
         ArrayList<PlaceDto> result = new ArrayList<>();
-        String url = UriComponentsBuilder.fromHttpUrl(KAKAO_LOCATION_URL).queryParam("query", keyword).queryParam("size", offset).queryParam("page", page).build().toUriString();
-        ArrayList<LinkedHashMap> list = (ArrayList<LinkedHashMap>) restTemplate.exchange(url, HttpMethod.GET, entity, JSONObject.class).getBody().get("documents");
+        if (category == null)
+            url = UriComponentsBuilder.fromHttpUrl(KAKAO_LOCATION_URL).queryParam("query", keyword).queryParam("size", offset).queryParam("page", page).build().toUriString();
+        else
+            url = UriComponentsBuilder.fromHttpUrl(KAKAO_LOCATION_URL).queryParam("query", keyword).queryParam("category_group_code", category.toString()).queryParam("size", offset).queryParam("page", page).build().toUriString();
 
+        ArrayList<LinkedHashMap> list = (ArrayList<LinkedHashMap>) restTemplate.exchange(url, HttpMethod.GET, entity, JSONObject.class).getBody().get("documents");
         for (LinkedHashMap value : list)
             result.add(objectMapper.readValue(JSONObject.toJSONString(value), PlaceDto.class));
 
         return result;
     }
+
     public ProfileApiDto callUserInfoAPI(String accessToken, String refreshToken) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
