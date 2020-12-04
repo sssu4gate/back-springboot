@@ -2,10 +2,12 @@ package com.gate.planner.gate.model.entity.place;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@ApiModel
 @Getter
+@ApiModel
+@AllArgsConstructor
 public enum PlaceCategory {
     @ApiModelProperty("대형마트")
     MT1,

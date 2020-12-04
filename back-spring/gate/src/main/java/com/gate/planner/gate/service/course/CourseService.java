@@ -18,10 +18,7 @@ import com.gate.planner.gate.model.dto.course.response.CourseResponseDetailDto;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperRequestDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperResponseDto;
-import com.gate.planner.gate.model.entity.course.Course;
-import com.gate.planner.gate.model.entity.course.CourseRequestType;
-import com.gate.planner.gate.model.entity.course.CourseSearchType;
-import com.gate.planner.gate.model.entity.course.ShareType;
+import com.gate.planner.gate.model.entity.course.*;
 import com.gate.planner.gate.model.entity.course.like.CourseLike;
 import com.gate.planner.gate.model.entity.course.memo.CourseMemo;
 import com.gate.planner.gate.model.entity.course.report.CourseReport;
@@ -221,23 +218,23 @@ public class CourseService {
      * 나와 연관된 코스정보
      */
     @Transactional
-    public List<CourseResponseDto> findUserRelatedCourse(CourseSearchType type, int page, int offset, String startDate, String endDate) throws ParseException {
+    public List<CourseResponseDto> findUserRelatedCourse(UserRelatedCourseSearchType type, int page, int offset, String startDate, String endDate) throws ParseException {
         User user = userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(UserNotExistException::new);
         List<CourseResponseDto> returnCourseList = new ArrayList<>();
-        if (type.equals(CourseSearchType.LIKE)) {
+        if (type.equals(UserRelatedCourseSearchType.LIKE)) {
             List<CourseOnly> courseList = courseLikeRepository.findAllByUser(user, new CommonPage(page, offset));
             for (CourseOnly course : courseList)
                 returnCourseList.add(new CourseResponseDto(course.getCourse()));
 
-        } else if (type.equals(CourseSearchType.WRITE)) {
+        } else if (type.equals(UserRelatedCourseSearchType.WRITE)) {
             List<Course> courseList = courseRepository.findAllByUser(user, new CommonPage(page, offset));
             for (Course course : courseList)
                 returnCourseList.add(new CourseResponseDto(course));
-        } else if (type.equals(CourseSearchType.DATE) && startDate != null && endDate != null) {
+        } else if (type.equals(UserRelatedCourseSearchType.DATE) && startDate != null && endDate != null) {
             Date sDate = DateUtil.parseDateFormat(startDate);
             Date eDate = DateUtil.parseDateFormat(endDate);
 
-            return courseRepository.findAllByDateDayBetweenAndUser(sDate, eDate, user).stream().map(CourseResponseDto::new).collect(Collectors.toList());
+            return courseRepository.findAllByDateDayBetweenAndUser(sDate, eDate, user, new CommonPage(page, offset)).stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else
             throw new CourseSearchTypeWrongException();
         return returnCourseList;

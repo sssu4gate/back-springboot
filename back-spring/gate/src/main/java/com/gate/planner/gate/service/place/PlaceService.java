@@ -8,10 +8,10 @@ import com.gate.planner.gate.model.dto.place.PlaceWrapperRequestDto;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.place.Coordinate;
 import com.gate.planner.gate.model.entity.place.Place;
+import com.gate.planner.gate.model.entity.place.PlaceCategory;
 import com.gate.planner.gate.model.entity.place.PlaceWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,8 @@ public class PlaceService {
         return placeRepository.findById(placeDto.getId())
                 .orElse(placeRepository.save(Place.builder()
                         .id(placeDto.getId())
-                        .category(placeDto.getCategory_name())
+                        .categoryName(placeDto.getCategory_name())
+                        .category(PlaceCategory.valueOf(placeDto.getCategory_group_code()))
                         .address(placeDto.getAddress_name())
                         .coordinate(new Coordinate(placeDto.getX(), placeDto.getY()))
                         .name(placeDto.getPlace_name()).build()));

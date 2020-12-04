@@ -3,7 +3,7 @@ package com.gate.planner.gate.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gate.planner.gate.model.dto.course.response.CourseResponseDto;
 import com.gate.planner.gate.model.dto.user.UserInfoDto;
-import com.gate.planner.gate.model.entity.course.CourseSearchType;
+import com.gate.planner.gate.model.entity.course.UserRelatedCourseSearchType;
 import com.gate.planner.gate.service.course.CourseService;
 import com.gate.planner.gate.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +32,7 @@ public class UserController {
 
     @ApiOperation(("나와 관련된 코스 보기"))
     @GetMapping("/info/course")
-    public List<CourseResponseDto> userRelatedCourse(@RequestParam CourseSearchType type, @RequestParam int page, @RequestParam int offset, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) throws ParseException {
+    public List<CourseResponseDto> userRelatedCourse(@RequestParam UserRelatedCourseSearchType type, @RequestParam int page, @RequestParam int offset, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) throws ParseException {
         return courseService.findUserRelatedCourse(type, page, offset, startDate, endDate);
     }
 

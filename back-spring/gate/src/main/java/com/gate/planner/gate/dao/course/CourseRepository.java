@@ -24,5 +24,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findAllByShareTypeAndReportFlagIsFalseOrderByLikeNumDesc(ShareType type, Pageable pageable);
 
-    List<Course> findAllByDateDayBetweenAndUser(Date startDate, Date endDate, User user);
+    List<Course> findAllByDateDayBetweenAndUser(Date startDate, Date endDate, User user, Pageable pageable);
 }

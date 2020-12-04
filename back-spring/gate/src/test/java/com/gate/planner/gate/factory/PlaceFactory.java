@@ -5,6 +5,7 @@ import com.gate.planner.gate.exception.place.PlaceNotExistException;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
 import com.gate.planner.gate.model.dto.place.PlaceWrapperRequestDto;
 import com.gate.planner.gate.model.entity.place.Place;
+import com.gate.planner.gate.model.entity.place.PlaceCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ public class PlaceFactory {
     private String first_x = "126.95781764313084";
     private String first_y = "37.495853033944364";
     private String first_category_name = "교육,학문 > 학교 > 대학교";
+    private String first_category = PlaceCategory.SC4.toString();
 
     private Long second_id = Long.parseLong("17361144");
     private String second_place_name = "숭실대학교 정보과학관";
@@ -29,6 +31,7 @@ public class PlaceFactory {
     private String second_x = "126.95976562412";
     private String second_y = "37.4945751847859";
     private String second_category_name = "교육,학문 > 학교부속시설";
+    private String second_category = PlaceCategory.SC4.toString();
 
 
     public PlaceWrapperRequestDto returnPlaceWrapperDto() {
@@ -61,7 +64,7 @@ public class PlaceFactory {
 
     public List<PlaceDto> returnFirstPlaceDtoList() {
         ArrayList<PlaceDto> places = new ArrayList();
-        PlaceDto place = new PlaceDto(first_id, first_address_name, fist_place_name, first_category_name, first_x, first_y);
+        PlaceDto place = new PlaceDto(first_id, first_address_name, fist_place_name, first_category_name, first_category, first_x, first_y);
         places.add(place);
 
         return places;
@@ -69,7 +72,7 @@ public class PlaceFactory {
 
     public List<PlaceDto> returnSecondPlaceDtoList() {
         ArrayList<PlaceDto> places = new ArrayList();
-        PlaceDto place = new PlaceDto(second_id, second_address_name, second_place_name, second_category_name, second_x, second_y);
+        PlaceDto place = new PlaceDto(second_id, second_address_name, second_place_name, second_category_name, second_category, second_x, second_y);
         places.add(place);
 
         return places;

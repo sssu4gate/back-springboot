@@ -33,11 +33,11 @@ public class UserFactory {
 
 
     public SignUpRequestDto returnSignUpRequestDto1() {
-        return new SignUpRequestDto(id1, nickName1, gender1, birth1, accessToken, refreshToken);
+        return new SignUpRequestDto(id1, null, nickName1, gender1, birth1, accessToken, refreshToken);
     }
 
     public SignUpRequestDto returnSignUpRequestDto2() {
-        return new SignUpRequestDto(id2, nickName2, gender2, birth2, accessToken, refreshToken);
+        return new SignUpRequestDto(id2, null, nickName2, gender2, birth2, accessToken, refreshToken);
     }
 
     public User returnSignUpUser1() throws ParseException {

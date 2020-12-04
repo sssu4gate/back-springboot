@@ -4,7 +4,7 @@ import com.gate.planner.gate.controller.AuthController;
 import com.gate.planner.gate.controller.UserController;
 import com.gate.planner.gate.exception.course.CourseSearchTypeWrongException;
 import com.gate.planner.gate.factory.CommonFactory;
-import com.gate.planner.gate.model.entity.course.CourseSearchType;
+import com.gate.planner.gate.model.entity.course.UserRelatedCourseSearchType;
 import com.gate.planner.gate.service.auth.AuthService;
 import com.gate.planner.gate.service.user.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -44,11 +44,13 @@ public class UserTest extends CommonFactory {
     public void findUserRelatedPostTest() {
         Assertions.assertAll(
                 () -> Assertions.assertDoesNotThrow(() ->
-                        Assertions.assertNotNull(userController.userRelatedCourse(CourseSearchType.LIKE, 1, 5))),
+                        Assertions.assertNotNull(userController.userRelatedCourse(UserRelatedCourseSearchType.LIKE, 1, 5, null, null))),
                 () -> Assertions.assertDoesNotThrow(() ->
-                        Assertions.assertNotNull(userController.userRelatedCourse(CourseSearchType.WRITE, 1, 5))),
-                () -> Assertions.assertThrows(CourseSearchTypeWrongException.class,
-                        () -> userController.userRelatedCourse(CourseSearchType.PLACE, 1, 5),
+                        Assertions.assertNotNull(userController.userRelatedCourse(UserRelatedCourseSearchType.WRITE, 1, 5, null, null))),
+                () -> Assertions.assertDoesNotThrow(() ->
+                        Assertions.assertNotNull(userController.userRelatedCourse(UserRelatedCourseSearchType.DATE, 1, 5, "2020-12-01", "2020-12-31"))),
+                () -> Assertions.assertThrows(NullPointerException.class,
+                        () -> userController.userRelatedCourse(null, 1, 5, null, null),
                         "올바르지 않은 요청 타입입니다.")
         );
     }

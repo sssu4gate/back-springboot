@@ -1,13 +1,10 @@
 package com.gate.planner.gate.model.entity.place;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -17,18 +14,21 @@ public class Place {
     Long id;
 
     String name;
-    String category;
+    String categoryName;
     String address;
+    @Enumerated(EnumType.STRING)
+    PlaceCategory groupCategory;
 
     @Embedded
     Coordinate coordinate;
 
     @Builder
-    public Place(Long id, String address, String name, String category, Coordinate coordinate) {
+    public Place(Long id, String address, String name, String categoryName, PlaceCategory category, Coordinate coordinate) {
         this.id = id;
         this.name = name;
         this.address = address;
-        this.category = category;
+        this.groupCategory = category;
+        this.categoryName = categoryName;
         this.coordinate = coordinate;
     }
 }

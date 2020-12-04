@@ -59,7 +59,7 @@ public class CourseTest extends CommonFactory {
     public void saveCourseTest() {
         CourseRequestDto courseRequestDto = courseFactory.returnCourseRequestDto();
         Assertions.assertAll(
-                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(courseRequestDto)),
+                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(null, courseRequestDto)),
                 () -> Assertions.assertDoesNotThrow(() -> {
                     Assertions.assertNotEquals(0,
                             searchController.getCourseSearchList(userFactory.getNickName1(), CourseSearchType.WRITE, 1, 5).size()
@@ -79,9 +79,9 @@ public class CourseTest extends CommonFactory {
                     Course course = courseFactory.returnSaveCourse();
                     SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userFactory.getId2(), ""));
                     Assertions.assertThrows(CourseUpdateDenyException.class,
-                            () -> courseController.updateCourse(courseFactory.returnSaveCourse().getId(), courseUpdateDto), "수정 권한이없습니다.");
+                            () -> courseController.updateCourse(courseFactory.returnSaveCourse().getId(), null, courseUpdateDto), "수정 권한이없습니다.");
                     SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userFactory.getId1(), ""));
-                    Assertions.assertDoesNotThrow(() -> courseController.updateCourse(course.getId(), courseUpdateDto));
+                    Assertions.assertDoesNotThrow(() -> courseController.updateCourse(course.getId(), null, courseUpdateDto));
                 },
                 () -> Assertions.assertEquals(courseUpdateDto.getCourseName(), courseFactory.findCourseAtDB().get(0).getTitle()));
 
@@ -103,8 +103,8 @@ public class CourseTest extends CommonFactory {
     public void returnBasicCourseListTest() {
         Assertions.assertAll(
                 () -> Assertions.assertDoesNotThrow(() -> placeService.decideCoursePlaces(placeFactory.returnSecondPlaceDtoList())),
-                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(courseFactory.returnUpdateCourseRequestDto())),
-                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(courseFactory.returnCourseRequestDto())),
+                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(null, courseFactory.returnUpdateCourseRequestDto())),
+                () -> Assertions.assertDoesNotThrow(() -> courseController.saveCourse(null, courseFactory.returnCourseRequestDto())),
                 () -> Assertions.assertThrows(CourseRequestTypeInvalidException.class, () -> courseService.basicCourseList(null, 1, 5)),
                 () -> Assertions.assertNotEquals(2, courseController.responseBasicCourseList(CourseRequestType.LATEST, 1, 5).size()),
                 () -> Assertions.assertNotEquals(2, courseController.responseBasicCourseList(CourseRequestType.LIKE, 1, 5).size())
