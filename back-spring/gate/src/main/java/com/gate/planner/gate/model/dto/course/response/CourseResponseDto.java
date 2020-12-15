@@ -25,6 +25,9 @@ public class CourseResponseDto {
     @ApiModelProperty("코스 본문")
     String content;
 
+    @ApiModelProperty("코스 이미지")
+    String courseImgUrl;
+
     @ApiModelProperty("유저 이미지")
     String userImgUrl;
 
@@ -42,6 +45,7 @@ public class CourseResponseDto {
     public CourseResponseDto(Course course) {
         this.id = course.getId();
         this.shareType = course.getShareType();
+        this.courseImgUrl = course.getImgUrl();
         this.nickName = course.getUser().getNickName();
         this.content = course.getContent();
         this.userImgUrl = course.getUser().getImgUrl();
