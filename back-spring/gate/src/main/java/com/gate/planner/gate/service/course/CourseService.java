@@ -29,6 +29,7 @@ import com.gate.planner.gate.service.course.function.ImgUploadFunction;
 import com.gate.planner.gate.service.place.PlaceService;
 import com.gate.planner.gate.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -275,6 +276,8 @@ public class CourseService {
             return courseRepository.findAllByShareTypeAndReportFlagIsFalse(ShareType.PUBLIC, new CommonPage(page, offset))
                     .stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else if (type == CourseRequestType.LIKE) {
+            Page<Course> pages = courseRepository.findAllByShareTypeAndReportFlagIsFalseOrderByLikeNumDesc(ShareType.PUBLIC, new CommonPage(page, offset));
+
             return courseRepository.findAllByShareTypeAndReportFlagIsFalseOrderByLikeNumDesc(ShareType.PUBLIC, new CommonPage(page, offset))
                     .stream().map(CourseResponseDto::new).collect(Collectors.toList());
         } else {

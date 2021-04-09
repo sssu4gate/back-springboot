@@ -3,6 +3,8 @@ package com.gate.planner.gate;
 import com.gate.planner.gate.controller.SearchController;
 import com.gate.planner.gate.model.dto.place.PlaceDto;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +20,7 @@ public class ApiTest {
     SearchController searchController;
 
     @Test
+    @DisplayName("카카오 Local Api 호출 테스트")
     void requestApiTest() throws IOException {
         //중간에 에러가 발생하면 안됨
         ArrayList<PlaceDto> placeList =

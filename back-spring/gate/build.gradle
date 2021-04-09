@@ -4,7 +4,6 @@ plugins {
     id 'java'
     id 'jacoco'
 }
-
 group = 'com.4gate.planner'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
@@ -15,10 +14,9 @@ configurations {
     }
 }
 
-repositories {
+repositories{
     mavenCentral()
 }
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -40,6 +38,7 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 }
+
 test {
     useJUnitPlatform()
     finalizedBy 'jacocoTestReport'
@@ -48,7 +47,6 @@ test {
 jacoco {
     toolVersion = "0.8.5"
 }
-
 jacocoTestReport {
     reports {
         html.enabled true

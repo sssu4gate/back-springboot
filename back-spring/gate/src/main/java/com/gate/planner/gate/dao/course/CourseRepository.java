@@ -3,6 +3,7 @@ package com.gate.planner.gate.dao.course;
 import com.gate.planner.gate.model.entity.course.Course;
 import com.gate.planner.gate.model.entity.course.ShareType;
 import com.gate.planner.gate.model.entity.user.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findAllByShareTypeAndReportFlagIsFalse(ShareType shareType, Pageable pageable);
 
-    List<Course> findAllByShareTypeAndReportFlagIsFalseOrderByLikeNumDesc(ShareType type, Pageable pageable);
+    Page<Course> findAllByShareTypeAndReportFlagIsFalseOrderByLikeNumDesc(ShareType type, Pageable pageable);
 
     List<Course> findAllByDateDayBetweenAndUser(Date startDate, Date endDate, User user, Pageable pageable);
 }

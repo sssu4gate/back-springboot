@@ -16,6 +16,7 @@ public class Place {
     String name;
     String categoryName;
     String address;
+
     @Enumerated(EnumType.STRING)
     PlaceCategory groupCategory;
 

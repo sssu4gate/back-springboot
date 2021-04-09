@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(indexes = @Index(name = "i_title",columnList = "title"))
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course {
@@ -21,7 +22,7 @@ public class Course {
     Long id;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false,length = 20)
     String title;
 
     @Lob
@@ -37,6 +38,7 @@ public class Course {
     List<PlaceWrapper> places = new ArrayList<>();
 
     @Setter
+    @Column(length = 10,nullable = false)
     @Enumerated(EnumType.STRING)
     ShareType shareType;
 

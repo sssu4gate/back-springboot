@@ -11,10 +11,10 @@ import javax.persistence.Embeddable;
 @Getter
 @NoArgsConstructor
 public class Coordinate {
-    @Column(name = "x", nullable = false)
+    @Column(name = "x", nullable = false, length = 20)
     private String x;
 
-    @Column(name = "y", nullable = false)
+    @Column(name = "y", nullable = false, length = 20)
     private String y;
 
     @Builder

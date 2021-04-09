@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(indexes = @Index(name = "i_nickName", columnList = "nickName"))
 public class User implements UserDetails {
     @Id
     Long id;
@@ -39,6 +40,7 @@ public class User implements UserDetails {
 
     Date createdAt = DateUtil.toAsiaTimeZone();
 
+    @Column(nullable = false, length = 1)
     @Enumerated(EnumType.STRING)
     Gender gender;
 

@@ -36,6 +36,7 @@ public class AuthTest extends CommonFactory {
         Assertions.assertDoesNotThrow(() -> authController.signUp(userFactory.returnSignUpRequestDto1()));
     }
 
+
     /**
      * 회원가입 후 토큰생성 및 유효성 검사
      */

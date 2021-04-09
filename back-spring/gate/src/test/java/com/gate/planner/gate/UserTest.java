@@ -10,6 +10,9 @@ import com.gate.planner.gate.service.user.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +24,9 @@ import java.text.ParseException;
 @SpringBootTest
 @Transactional
 public class UserTest extends CommonFactory {
+
+    @RegisterExtension
+    CustomExtension extension = new CustomExtension();
 
     @Autowired
     AuthController authController;

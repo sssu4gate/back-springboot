@@ -20,6 +20,7 @@ public class PlaceWrapper {
     int cost;
 
     @Setter
+    @Column(nullable = false, length = 20)
     String time;
 
     @ManyToOne
@@ -35,5 +36,4 @@ public class PlaceWrapper {
         this.place = place;
         this.course = course;
     }
-
 }
